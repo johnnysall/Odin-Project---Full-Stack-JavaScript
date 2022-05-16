@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up Form</title>
+    <link rel="stylesheet" href="stylesheet.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dosis:wght@300&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="LeftSide">
+        <div id="BackgroundIMG">
+            <img id="BackgroundImage" src="Images/NarutoBackground.jpg">
+        </div>
+        <div id="IMGTextLogo">
+            <img id="LogoImage" src="Images/odin-lined.png">
+            <div id="IMGText">
+                Sign-Up Form
+            </div>
+        </div>
+    </div>
+
+    <div id="RightSide">
+        <div id="WebsiteDesc">
+            <div class="GeneralText" id="WebsiteDescText">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</div>
+            <div class="GeneralText" id="MottoText">You <em>Know</em> what you want</div>
+        </div>
+        
+        <div id="SignUpContainer">
+            <form action="#" method="get" id="SignUpForm">
+                <div id="SignUpContainerCaption">Let's Do This!</div>
+
+                <div class="formInput" id="firstNameInputContainer">
+                    <label for="firstName">FIRST NAME</label>
+                    <input type="text" id="firstName">
+                </div>
+                
+                <div class="formInput" id="lastNameInputContainer">
+                    <label for="lastName">LAST NAME</label>
+                    <input type="text" id="lastName">
+                </div>
+
+                <div class="formInput" id="emailInputContainer">
+                    <label for="emailInput">EMAIL</label>
+                    <input type="email" id="emailInput">
+                </div>
+                
+                <div class="formInput" id="phoneNumInputContainer">
+                    <label for="phoneNum">PHONE NUMBER</label>
+                    <input type="number" id="phoneNumInput">
+                </div>
+
+                <div class="formInput" id="passwordInputContainer">
+                    <label for="passwordInput">PASSWORD</label>
+                    <input type="password" minlength="8" id="passwordInput" required>
+                </div>
+
+                <div class="formInput" id="confirmPasswordInputContainer">
+                    <label for="confirmPasswordInput">CONFIRM PASSWORD</label>
+                    <input type="password" minlength="8" id="confirmPasswordInput" required>
+                </div>
+
+                <input id="CreateAccountBtn" type="submit" value="Create Account">
+            </form>
+        </div>
+
+        <div id="AccountCreation">
+            <!-- <div id="CreateAccountBtn">
+                Create Account
+            </div> -->
+            <div id="AlreadyHaveAccountTXT">
+                Already have an account?
+            </div>
+            <div id="LogInBtn">
+                Log In
+            </div>
+        </div>
+    </div>
+</body>
+</html>
