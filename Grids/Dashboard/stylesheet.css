@@ -1,0 +1,280 @@
+/* http://meyerweb.com/eric/tools/css/reset/ 
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+body {
+	line-height: 1;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+/* --------------------------------------------------- Meyers Reset --------------------------------------------------------------- */
+
+
+:root {
+    --borderColour: rgb(150, 150, 150);
+    --backgroundColour: rgb(221, 221, 221);
+    --fontFamily: 'Dosis', sans-serif;
+    --alternateColour: rgb(36, 36, 36);
+    --fontColour: rgb(68, 68, 68);
+    --alternateFontColour: rgb(221, 221, 221);
+    --alternateBackgroundColour: rgb(241, 241, 241);
+}
+
+html {
+    background-color: var(--backgroundColour);
+    height: 100vh;
+}
+
+body {
+    width: 100%;
+    margin: 0 auto;
+}
+
+#PageLayout {
+    width: 100%;
+    height: 100vh;
+    resize: both;
+    display: grid;
+    grid-template: 1fr 4fr / 1fr 5fr;
+    /* gap: 4px;
+    padding: 4px;
+    border: 1px solid grey;
+    background-color: skyblue;
+    grid-template-rows: repeat(2, 1fr);
+    grid-template-columns: repeat(5, 1fr); */
+}
+
+#SideNav {
+    padding: 0 0 0 2vw;
+    grid-column-start: 1;
+    grid-column-end: 1;
+    grid-row-start: 1;
+    grid-row-end: 3;
+    resize: both;
+    display: inline-grid;
+    grid-template: 188px repeat(6, calc(40vh/6)) / 100%;
+    font-family: var(--fontFamily);
+    font-weight: bold;
+    font-size: 20px;
+    color: var(--fontColour);
+    background-color: var(--borderColour);
+}
+
+.SideNav-item {
+    display: flex;
+    align-items: center;
+    padding-left: 25px;
+}
+
+.SideNav-item:hover {
+    background-color: var(--alternateColour);
+    border-top-left-radius: 20px;
+    border-bottom-left-radius: 20px;
+    cursor: pointer;
+    color: var(--alternateFontColour);
+}
+
+.SideNav-item-active {
+    display: flex;
+    align-items: center;
+    padding-left: 25px;
+    background-color: var(--alternateColour);
+    border-top-left-radius: 20px;
+    border-bottom-left-radius: 20px;
+    color: var(--alternateFontColour);
+}
+
+#DashboardTitle {
+    /* margin-bottom: 15vh; */
+    display: flex;
+    align-items: center;
+    padding-left: 25px;
+    font-size: 25px;
+}
+
+#Header {
+    grid-column-start: 2;
+    grid-column-end: 2;
+    grid-row-start: 1;
+    grid-row-end: 1;
+    background-color: var(--alternateBackgroundColour);
+    border-bottom: solid thin var(--borderColour);
+    padding: 10px;
+    color: var(--fontColour);
+    font-family: var(--fontFamily);
+    font-weight: bold;
+    font-size: 20px;
+
+    gap: 10px;
+    display: grid;
+    grid-template: 1fr 1fr / 1fr 1fr;
+}
+
+#FunctionBtns-div {
+    grid-column-start: 1;
+    grid-column-end: 3;
+    display: grid;
+    grid-template: 1fr / 1fr 1fr;
+}
+
+#FunctionBtns-div div{
+    min-width: 75px;
+    width: 30%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 25px;
+    margin: 20px 35% 20px 35%;
+    border: solid thin var(--borderColour);;
+}
+
+#FunctionBtns-div div:hover{
+    background-color: var(--alternateColour);
+    cursor: pointer;
+}
+
+.Header-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+#Main {
+    grid-column-start: 2;
+    grid-column-end: 2;
+    grid-row-start: 2;
+    grid-row-end: 2;
+    background-color: var(--backgroundColour);
+    box-shadow: inset 0px 2px 7px -3px rgba(83, 83, 83, 0.75);
+
+    gap: 10px;
+    display: grid;
+    grid-template: 1fr / 6fr 2fr;
+}
+
+#Project-div {
+    height: 100%;
+    display: grid;
+    grid-template: 7% 31% 31% 31% / 1fr 1fr;
+}
+
+.Project-SingleExample {
+    font-family: var(--fontFamily);
+    font-weight: bold;
+    font-size: 20px;
+    margin: 17.5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--alternateBackgroundColour);
+    border-radius: 20px;
+    box-shadow: 0px 0px 10px 1px rgba(145, 145, 145, 0.3);
+}
+
+.Project-SingleExample:hover {
+    background-color: var(--alternateBackgroundColour);
+    border: solid thin var(--backgroundColour);
+    cursor: pointer;
+    margin: 15px;
+    box-shadow: 0px 0px 10px 1px rgba(145, 145, 145, 0.3);
+}
+
+#Project-title {
+    font-family: var(--fontFamily);
+    font-weight: bold;
+    font-size: 20px;
+
+    grid-column-start: 1;
+    grid-column-end: 3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#Right-div {
+    font-family: var(--fontFamily);
+    font-weight: bold;
+    font-size: 20px;
+
+    height: 100%;
+    display: grid;
+    grid-template: 7% 43% 7% 43% / 1fr;
+}
+
+#Announcement-div, 
+#Trending-div{
+    font-family: var(--fontFamily);
+    font-weight: bold;
+    font-size: 20px;
+    background-color: var(--alternateBackgroundColour);
+    border-radius: 20px;
+    box-shadow: 0px 0px 10px 1px rgba(145, 145, 145, 0.3);
+    margin: 17.5px;
+}
+
+#Announcement-title,
+#Trending-title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#Announcement-div {
+    padding: 25px;
+    display: grid;
+    grid-template: 1fr 1fr 1fr / 1fr;
+}
+
+#Trending-div {
+    padding: 25px;
+    display: grid;
+    grid-template: 1fr 1fr 1fr 1fr / 1fr;
+}
+
+.Announcements-SingleExample,
+.Trendings-SingleExample {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
