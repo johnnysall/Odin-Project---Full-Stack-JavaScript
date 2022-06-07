@@ -18,8 +18,25 @@
 
     <div id="newBookModal" class="modal">
         <div class="modal-content">
-            <span class="newBookModalCloseBtn">&times;</span>
-            <p>Some text in the Modal..</p>
+            <span id="newBookModalCloseBtn" class="close">&times;</span>
+            <form id="addBookForm">
+                <label for="bookTitle">Book Title</label>
+                <input type="text" id="bookTitle" name="firstname" placeholder="Book Title..">
+            
+                <label for="author">Author</label>
+                <input type="text" id="author" name="author" placeholder="Author..">
+            
+                <label for="pages">Pages</label>
+                <input type="number" id="pages" name="pages" placeholder="Number of Pages..">
+
+                <label for="isRead">Have you Read it?</label>
+                <select id="isRead" name="isRead">
+                    <option value="true">Yes</option>
+                    <option value="false">No</option>
+                  </select>
+              
+                <div id="addBookSubmit" class="btn" type="submit" value="Submit">Submit</div>
+              </form>
         </div>
     </div>
 
