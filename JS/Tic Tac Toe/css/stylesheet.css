@@ -86,9 +86,12 @@ body {
     align-items: center;
 }
 
-#Main {
+/* GamePage */
+
+#gamePageMain {
     width: 100vw;
     height: calc(100vh - 151px);
+
     display: flex;
     justify-content: center;
     align-items: center;
@@ -109,8 +112,54 @@ body {
 .singleGrid {
     border: solid thin var(--highlightColour);
     border-radius: 10px;
+    font-weight: bold;
+    font-size: 50px;
+    font-family: var(--fontFam);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .emptyGrid:hover {
     background-color: var(--alternateColour);
+}
+
+.full {
+    background-color: var(--alternateColour);
+}
+
+/* Index Page */
+
+#indexMain {
+    margin-top: 50px;
+    width: 100vw;
+    height: calc(100vh - 201px);
+
+    display: flex;
+}
+
+#player1Container,
+#playerorAIContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 50%;
+    float: left;
+}
+
+#aiOrPlayerBtn {
+
+}
+
+#playerorAIContainer {
+    width: ;
+}
+
+#aiBtn,
+#playerBtn {
+    width: 50px;
+    height: 50px;
+    border: solid thin var(--highlightColour);
+    border-radius: 10px;
 }
