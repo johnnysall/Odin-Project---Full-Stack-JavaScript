@@ -1,11 +1,12 @@
-console.log("script.js")
-
 const aiBtn = document.getElementById("aiBtn");
 const playerBtn = document.getElementById("playerBtn");
+let againstAI = false;
 aiBtn.addEventListener("click", function() {
+    againstAI = true;
     gameSetup.vsPlayer("ai");
 });
 playerBtn.addEventListener("click", function() {
+    againstAI = false;
     gameSetup.vsPlayer("player");
 });
 
@@ -33,9 +34,13 @@ const possibleWins = [
     [2, 4, 6],
 ];
 
+let score = 0;
+
 // Player 1 = naughts, Player 2 = Crosses
-const player1 = { name: "", symbol: "o" }
-const player2 = { name: "", symbol: "o" }
+const player1 = { name: "Unknown", symbol: "x" }
+const player2 = { name: "Unknown", symbol: "o" }
+
+let player = player1;
 
 const gameSetup = (() => {
     const vsPlayer = (playerType) => {
@@ -56,6 +61,18 @@ const gameSetup = (() => {
     
     const startGame = () => {
         getBoardElement();
+        p1Name = document.getElementById("P1Name").value;
+        p1Symbol = document.getElementById("P1Symbol").value;
+        if (p1Name !== ""){ player1.name = p1Name; }
+        if (p1Symbol !== ""){ player1.symbol = p1Symbol; }
+
+        if (againstAI === false){
+            p2Name = document.getElementById("P2Name").value;
+            p2Symbol = document.getElementById("P2Symbol").value;
+            
+            if (p2Name !== ""){ player2.name = p2Name; }
+            if (p2Symbol !== ""){ player2.symbol = p2Symbol; }
+        }
     }
 
     return { vsPlayer, startGame };
@@ -84,19 +101,19 @@ const gameManagement = (() => {
 
     const updateBoard = (location) => {
         var grid = document.getElementById("grid" + location);
-        boardValues[location] = player;
+        boardValues[location] = player.name;
         grid.classList.add("full");
-        grid.classList.add(player);
+        grid.classList.add(player.name);
         grid.removeEventListener("click", function() {
             clickGrid(location);
           });
         checkForWin(location);
-        if (player === 1){
-            grid.innerText = "o";
-            player = 2;
+        if (player === player1){
+            grid.innerText = player1.symbol;
+            player = player2;
         }else {
-            grid.innerText = "x";
-            player = 1;
+            grid.innerText = player2.symbol;
+            player = player1;
         }
     }
 
@@ -110,7 +127,7 @@ const gameManagement = (() => {
                 // Check each value in the possible win array 
                 for (let ii = 0; ii < possibleWins[oi].length; ii++){
                     let gridValueToCheck = possibleWins[oi][ii];
-                    if (boardValues[gridValueToCheck] == player){
+                    if (boardValues[gridValueToCheck] == player.name){
                         winCheck++
                     } else {
                         break;

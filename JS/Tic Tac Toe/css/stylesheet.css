@@ -77,7 +77,7 @@ body {
 }
 
 #Header {
-    height: 150px;
+    height: 80px;
     background-color: var(--alternateColour);
     border-bottom: solid thin var(--highlightColour);
     font-weight: bold;
@@ -112,7 +112,7 @@ body {
 
 #gamePageMain {
     width: 100vw;
-    height: calc(100vh - 151px);
+    height: calc(100vh - 81px);
     position: absolute;
     z-index:1;
     background-color: var(--backColour);
@@ -125,6 +125,8 @@ body {
 #gridContainer {
     width: 50vw;
     height: 50vw;
+    max-height: 60vh;
+    max-width: 60vh;
     border: solid thin var(--highlightColour);
     border-radius: 10px;
     padding: 1%;
@@ -157,9 +159,9 @@ body {
 /* Index Page */
 
 #indexMain {
-    margin-top: 50px;
+    padding-top: 50px;
     width: 100vw;
-    height: calc(100vh - 201px);
+    height: calc(100vh - 131px);
     position: absolute;
     z-index:1123123;
     background-color: var(--backColour);
@@ -174,7 +176,7 @@ body {
 }
 
 @keyframes toGamePage {
-    from {top: 151px;}
+    from {top: 81px;}
     to {top: 100vh;}
 }
 
