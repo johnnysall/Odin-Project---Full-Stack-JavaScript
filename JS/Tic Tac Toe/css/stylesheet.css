@@ -58,7 +58,7 @@ table {
 
 :root {
     --backColour: rgb(5, 5, 5);
-    --alternateColour: rgb(20, 20, 20);
+    --alternateColour: rgb(39, 39, 39);
     --highlightColour: rgb(58, 212, 38);
     --fontFam: 'Dosis', sans-serif;
     --fontCol: rgb(231, 231, 231);
@@ -66,12 +66,14 @@ table {
 
 html {
     background-color: var(--backColour);
+    overflow-y: hidden;
 }
 
 body {
     background-color: var(--backColour);
     width: 100vw;
     height: 100vh;
+    overflow-y: hidden;
 }
 
 #Header {
@@ -90,8 +92,15 @@ body {
 
 .btn {
     border: solid thin var(--highlightColour);
-    border-radius: 10px;
     color: var(--fontCol);
+    font-family: var(--fontFam);
+    -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+    -moz-box-sizing: border-box;    /* Firefox, other Gecko */
+    box-sizing: border-box; 
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .btn:hover {
@@ -104,6 +113,9 @@ body {
 #gamePageMain {
     width: 100vw;
     height: calc(100vh - 151px);
+    position: absolute;
+    z-index:1;
+    background-color: var(--backColour);
 
     display: flex;
     justify-content: center;
@@ -148,14 +160,32 @@ body {
     margin-top: 50px;
     width: 100vw;
     height: calc(100vh - 201px);
+    position: absolute;
+    z-index:1123123;
+    background-color: var(--backColour);
 
     display: block;
+}
+
+.toGamePage {
+    animation-name: toGamePage;
+    animation-duration: 3s;  
+    animation-fill-mode: forwards; 
+}
+
+@keyframes toGamePage {
+    from {top: 151px;}
+    to {top: 100vh;}
 }
 
 #playerAITitle {
     width: 100%;
     color: var(--fontCol);
     text-align: center;
+    font-family: var(--fontFam);
+    margin-top: 20px;
+    display: block;
+    float: left;
 }
 
 #playerorAIContainer {
@@ -170,6 +200,7 @@ body {
 #playerInfoContainer {
     width: 80%;
     margin: 20px 10% 0 10%;
+    float: left;
 }
 
 #p1Container,
@@ -187,20 +218,36 @@ body {
     border-radius: 5px;
     background-color: #f2f2f2;
     padding: 2.5%;
-    margin: 2.5%;
+    margin: 0 2.5% 20px 2.5%;
+}
+
+#submitBtn {
+    width: calc(144px + 10%);
+    height: 70px;
+    position: relative;
+    margin: 20px auto;
 }
 
 #aiBtn,
 #playerBtn {
-    width: 50px;
-    height: 50px;
-    border: solid thin var(--highlightColour);
-    border-radius: 10px;
+    width: 70px;
+    height: 70px;
     margin: 5%;
+    position: relative;
+}
 
-    display: flex;
-    justify-content: center;
-    align-items: center;
+#aiBtn:active,
+#playerBtn:active,
+#submitBtn:active {
+    top: 2px;
+    transition: all 0.3s ease;
+}
+
+#aiBtn:hover,
+#playerBtn:hover,
+#submitBtn:hover {
+    border: solid 5px var(--highlightColour);
+    transition: all 0.3s ease;
 }
 
 input[type=text], select {
