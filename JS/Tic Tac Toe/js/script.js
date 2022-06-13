@@ -44,7 +44,11 @@ const possibleWins = [
     [2, 4, 6],
 ];
 
-let aiDifficultyLvl = 50;
+// How far ahead the AI can think - basically the difficulty
+// 0 = Easy, 
+// 1 = Medium, 
+// 2 = Impossible
+let searchDepth = 0;
 
 // Player 1 = naughts, Player 2 = Crosses
 const player1 = { name: "Player1", symbol: "x" }
@@ -190,6 +194,7 @@ const gameManagement = (() => {
     }
 
     const updateBoard = (location) => {
+        console.log(location);
         boardValues[location] = player.name;
         var grid = document.getElementById("grid" + location);
         try {
@@ -203,23 +208,7 @@ const gameManagement = (() => {
             clickGrid(location);
         });
         grid.innerText = player.symbol;
-        if (checkForWin(location) === "win"){
-            resetGame();
-            if (player === player1){
-                score[0] += 1;
-            } else {
-                score[1] += 1;
-            }
-            p1Score.innerText = player1.name + ": " + score[0];
-            p2Score.innerText = player2.name + ": " + score[1];
-        } if (checkForWin(location) === "draw") {
-            console.log("Draw");
-            resetGame();
-            score[0] += 1;
-            score[1] += 1;
-            p1Score.innerText = player1.name + ": " + score[0];
-            p2Score.innerText = player2.name + ": " + score[1];
-        }
+        checkForWin(location);
         changePlayer();
 
         // if (player === player1){
@@ -234,83 +223,59 @@ const gameManagement = (() => {
     const changePlayer = () => {
         if (player === player1){
             player = player2;
-            AI.aiMove();
+            AI.bestMove();
         } else {
             player = player1;
         }
     }
 
     const checkForWin = (location) => {
-        let updatedBoard = boardValues;
-        updatedBoard[location] = player.name;
-        console.log("BOARD VALUES: " + boardValues);
-        console.log("UPDATED BOARD: " + updatedBoard);
         // iterate through each possible win
         for (let oi = 0; oi < possibleWins.length; oi++) {
             let winCondition = possibleWins[oi];
             // Only search the ones the user just clicked - makes it more efficient 
-            if (winCondition.includes(location)){
+            if (winCondition.includes(location) || location === null){
+                console.log("2");
                 let winCheck = 0;
                 // Check each value in the possible win array 
                 for (let ii = 0; ii < possibleWins[oi].length; ii++){
+                    console.log("3");
                     let gridValueToCheck = possibleWins[oi][ii];
-                    if (updatedBoard[gridValueToCheck] == player.name){
+                    if (boardValues[gridValueToCheck] == player.name){
+                        console.log("4");
                         winCheck++
                     } else {
                         break;
                     }
                 } 
                 if (winCheck == 3){
-                    return "win";
+                    console.log("winner");
+                    return player;
+                    // resetGame();
+                    if (player === player1){
+                        score[0] += 1;
+                    } else {
+                        score[1] += 1;
+                    }
+                    p1Score.innerText = player1.name + ": " + score[0];
+                    p2Score.innerText = player2.name + ": " + score[1];
                 }
             }
         }
 
-        if (!boardValues.includes("")){
+        if (!boardValues.includes("") && location !== false){
+            console.log("Draw");
             return "draw";
+            
+            // resetGame();
+            score[0] += 1;
+            score[1] += 1;
+            p1Score.innerText = player1.name + ": " + score[0];
+            p2Score.innerText = player2.name + ": " + score[1];
         }
+        console.log("null");
+        return null;
     }
-
-
-
-    // const checkForWin = (location) => {
-    //     // iterate through each possible win
-    //     for (let oi = 0; oi < possibleWins.length; oi++) {
-    //         let winCondition = possibleWins[oi];
-    //         // Only search the ones the user just clicked - makes it more efficient 
-    //         if (winCondition.includes(location)){
-    //             let winCheck = 0;
-    //             // Check each value in the possible win array 
-    //             for (let ii = 0; ii < possibleWins[oi].length; ii++){
-    //                 let gridValueToCheck = possibleWins[oi][ii];
-    //                 if (boardValues[gridValueToCheck] == player.name){
-    //                     winCheck++
-    //                 } else {
-    //                     break;
-    //                 }
-    //             } 
-    //             if (winCheck == 3){
-    //                 resetGame();
-    //                 if (player === player1){
-    //                     score[0] += 1;
-    //                 } else {
-    //                     score[1] += 1;
-    //                 }
-    //                 p1Score.innerText = player1.name + ": " + score[0];
-    //                 p2Score.innerText = player2.name + ": " + score[1];
-    //             }
-    //         }
-    //     }
-
-    //     if (!boardValues.includes("")){
-    //         console.log("Draw");
-    //         resetGame();
-    //         score[0] += 1;
-    //         score[1] += 1;
-    //         p1Score.innerText = player1.name + ": " + score[0];
-    //         p2Score.innerText = player2.name + ": " + score[1];
-    //     }
-    // }
 
     return {startGame, resetGame, resetBoard, updateBoard, changePlayer, checkForWin};
 })();
@@ -320,6 +285,67 @@ const AI = (() => {
 
     }
 
+    const bestMove = () => {
+        let bestScore = -Infinity;
+        let move;
+
+        for (let i = 0; i < boardValues.length; i++){
+            if (boardValues[i] === ""){
+                boardValues[i] = player2.name;
+                let score = miniMax(boardValues, true, 0);
+                boardValues[i] = "";
+
+                if (score > bestScore) {
+                    bestScore = score;
+                    move = i;
+                }
+            }
+        }
+        gameManagement.updateBoard(move);
+    }
+
+    let scores = {
+        player1 : -1,
+        player2 : 1,
+        "draw" : 0
+    };
+
+    const miniMax = (board, isMaximising, depth) => {
+        let result = gameManagement.checkForWin(null);
+        if (result !== null) {
+            console.log("scores[result]" + scores[result]);
+            return scores[result];
+        }
+
+        if (isMaximising === true) {
+            let bestScore = -Infinity;
+            for (let i = 0; i < board.length; i++){
+                if (board[i] === ""){
+                    board[i] = player2.name;
+                    let score = miniMax(board, false, depth + 1);
+                    board[i] = "";
+                    if (score > bestScore) {
+                        bestScore = score;
+                    }
+                }
+            }
+            return bestScore;
+        } else {
+            let bestScore = Infinity;
+            for (let i = 0; i < board.length; i++){
+                if (board[i] === ""){
+                    board[i] = player1.name;
+                    let score = miniMax(board, true, depth + 1);
+                    board[i] = "";
+                    if (score > bestScore) {
+                        bestScore = score;
+                    }
+                }
+            }
+            return bestScore;
+        }
+    };
+
     const aiMove = () => {
         // Search Depth changes according to difficulty
         if (boardValues.includes(player1.name) || boardValues.includes(player2.name)) {
@@ -328,15 +354,15 @@ const AI = (() => {
             // Search through current board values to show which board places are empty
             for (let i = 0; i < boardValues.length; i++){
                 if (boardValues[i] === ""){
-                    possibleMoves.push(i);
+                    possibleMoves[0].push(i);
                 }
             }
 
             // If theres only one possible move the AI must just make that move
-            if (possibleMoves.length === 1){
-                updateBoard(possibleMoves[0]);
+            if (possibleMoves[0].length === 1){
+                updateBoard(possibleMoves[0][0]);
             } else {
-                possibleMoves.forEach(location => {
+                possibleMoves[0].forEach(location => {
                     gameManagement.checkForWin(location);
                 });
             }
@@ -346,5 +372,5 @@ const AI = (() => {
         }
     }
 
-    return {aiDifficulty, aiMove};
+    return {aiDifficulty, bestMove, miniMax, aiMove};
 })();
