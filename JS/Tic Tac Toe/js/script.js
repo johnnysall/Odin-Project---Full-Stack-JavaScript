@@ -203,7 +203,23 @@ const gameManagement = (() => {
             clickGrid(location);
         });
         grid.innerText = player.symbol;
-        checkForWin(location);
+        if (checkForWin(location) === "win"){
+            resetGame();
+            if (player === player1){
+                score[0] += 1;
+            } else {
+                score[1] += 1;
+            }
+            p1Score.innerText = player1.name + ": " + score[0];
+            p2Score.innerText = player2.name + ": " + score[1];
+        } if (checkForWin(location) === "draw") {
+            console.log("Draw");
+            resetGame();
+            score[0] += 1;
+            score[1] += 1;
+            p1Score.innerText = player1.name + ": " + score[0];
+            p2Score.innerText = player2.name + ": " + score[1];
+        }
         changePlayer();
 
         // if (player === player1){
@@ -218,12 +234,17 @@ const gameManagement = (() => {
     const changePlayer = () => {
         if (player === player1){
             player = player2;
+            AI.aiMove();
         } else {
             player = player1;
         }
     }
 
     const checkForWin = (location) => {
+        let updatedBoard = boardValues;
+        updatedBoard[location] = player.name;
+        console.log("BOARD VALUES: " + boardValues);
+        console.log("UPDATED BOARD: " + updatedBoard);
         // iterate through each possible win
         for (let oi = 0; oi < possibleWins.length; oi++) {
             let winCondition = possibleWins[oi];
@@ -233,34 +254,63 @@ const gameManagement = (() => {
                 // Check each value in the possible win array 
                 for (let ii = 0; ii < possibleWins[oi].length; ii++){
                     let gridValueToCheck = possibleWins[oi][ii];
-                    if (boardValues[gridValueToCheck] == player.name){
+                    if (updatedBoard[gridValueToCheck] == player.name){
                         winCheck++
                     } else {
                         break;
                     }
                 } 
                 if (winCheck == 3){
-                    resetGame();
-                    if (player === player1){
-                        score[0] += 1;
-                    } else {
-                        score[1] += 1;
-                    }
-                    p1Score.innerText = player1.name + ": " + score[0];
-                    p2Score.innerText = player2.name + ": " + score[1];
+                    return "win";
                 }
             }
         }
 
         if (!boardValues.includes("")){
-            console.log("Draw");
-            resetGame();
-            score[0] += 1;
-            score[1] += 1;
-            p1Score.innerText = player1.name + ": " + score[0];
-            p2Score.innerText = player2.name + ": " + score[1];
+            return "draw";
         }
     }
+
+
+
+    // const checkForWin = (location) => {
+    //     // iterate through each possible win
+    //     for (let oi = 0; oi < possibleWins.length; oi++) {
+    //         let winCondition = possibleWins[oi];
+    //         // Only search the ones the user just clicked - makes it more efficient 
+    //         if (winCondition.includes(location)){
+    //             let winCheck = 0;
+    //             // Check each value in the possible win array 
+    //             for (let ii = 0; ii < possibleWins[oi].length; ii++){
+    //                 let gridValueToCheck = possibleWins[oi][ii];
+    //                 if (boardValues[gridValueToCheck] == player.name){
+    //                     winCheck++
+    //                 } else {
+    //                     break;
+    //                 }
+    //             } 
+    //             if (winCheck == 3){
+    //                 resetGame();
+    //                 if (player === player1){
+    //                     score[0] += 1;
+    //                 } else {
+    //                     score[1] += 1;
+    //                 }
+    //                 p1Score.innerText = player1.name + ": " + score[0];
+    //                 p2Score.innerText = player2.name + ": " + score[1];
+    //             }
+    //         }
+    //     }
+
+    //     if (!boardValues.includes("")){
+    //         console.log("Draw");
+    //         resetGame();
+    //         score[0] += 1;
+    //         score[1] += 1;
+    //         p1Score.innerText = player1.name + ": " + score[0];
+    //         p2Score.innerText = player2.name + ": " + score[1];
+    //     }
+    // }
 
     return {startGame, resetGame, resetBoard, updateBoard, changePlayer, checkForWin};
 })();
@@ -273,6 +323,23 @@ const AI = (() => {
     const aiMove = () => {
         // Search Depth changes according to difficulty
         if (boardValues.includes(player1.name) || boardValues.includes(player2.name)) {
+            // List of possible moves in first nested list and second nested list is the scores
+            let possibleMoves = [[], []];
+            // Search through current board values to show which board places are empty
+            for (let i = 0; i < boardValues.length; i++){
+                if (boardValues[i] === ""){
+                    possibleMoves.push(i);
+                }
+            }
+
+            // If theres only one possible move the AI must just make that move
+            if (possibleMoves.length === 1){
+                updateBoard(possibleMoves[0]);
+            } else {
+                possibleMoves.forEach(location => {
+                    gameManagement.checkForWin(location);
+                });
+            }
 
         } else {
             boardValues[0] = player2.name;
@@ -280,4 +347,4 @@ const AI = (() => {
     }
 
     return {aiDifficulty, aiMove};
-});
+})();
