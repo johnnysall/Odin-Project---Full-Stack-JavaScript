@@ -12,13 +12,23 @@ playerBtn.addEventListener("click", function() {
 
 const submitBtn = document.getElementById("submitBtn");
 submitBtn.addEventListener("click", function() {
-    document.getElementById("indexMain").classList.add("toGamePage");
-    gameSetup.startGame();
+    gameSetup.gameInfo();
 });
+
+const resetBtn = document.getElementById("resetBtn");
+resetBtn.addEventListener("click", function() {
+    gameManagement.resetGame();
+});
+
+const gridContainer = document.getElementById("gridContainer");
 
 const p1DetailsContainer = document.getElementById("p1Container");
 const p2DetailsContainer = document.getElementById("p2Container");
 const playerAITitle = document.getElementById("playerAITitle");
+
+const p1Score = document.getElementById("p1Score");
+const p2Score = document.getElementById("p2Score");
+let score = [0,0];
 
 const gameBoard = ["0","1","2","3","4","5","6","7","8"];
 const boardValues = ["", "", "", "", "", "", "", "", ""];
@@ -34,13 +44,14 @@ const possibleWins = [
     [2, 4, 6],
 ];
 
-let score = 0;
+let aiDifficultyLvl = 50;
 
 // Player 1 = naughts, Player 2 = Crosses
-const player1 = { name: "Unknown", symbol: "x" }
-const player2 = { name: "Unknown", symbol: "o" }
+const player1 = { name: "Player1", symbol: "x" }
+const player2 = { name: "Player2", symbol: "o" }
 
 let player = player1;
+let startPlayer = player1;
 
 const gameSetup = (() => {
     const vsPlayer = (playerType) => {
@@ -59,23 +70,72 @@ const gameSetup = (() => {
         }
     }
     
-    const startGame = () => {
-        getBoardElement();
+    const gameInfo = () => {
         p1Name = document.getElementById("P1Name").value;
         p1Symbol = document.getElementById("P1Symbol").value;
-        if (p1Name !== ""){ player1.name = p1Name; }
-        if (p1Symbol !== ""){ player1.symbol = p1Symbol; }
 
         if (againstAI === false){
             p2Name = document.getElementById("P2Name").value;
             p2Symbol = document.getElementById("P2Symbol").value;
-            
-            if (p2Name !== ""){ player2.name = p2Name; }
-            if (p2Symbol !== ""){ player2.symbol = p2Symbol; }
+
+            let playerValues = [[],["Please Enter a Name",
+                                    "Must be a Single Character",
+                                    "Please Enter a Name",
+                                    "Must be a Single Character"]];
+
+            playerValues[0].push(p1Name, p1Symbol, p2Name, p2Symbol);
+
+            if (playerValues[0].includes("")){
+                resetForms();
+            } else {
+                if (playerValues[0][0] !== playerValues[0][2]) {
+                    if (playerValues[0][1] !== playerValues[0][3]) {
+                        if (playerValues[0][1].length === 1){
+                            if (playerValues[0][3].length === 1){
+                                player1.name = playerValues[0][0];
+                                player2.name = playerValues[0][2];
+                                player1.symbol = playerValues[0][1];
+                                player2.symbol = playerValues[0][3];
+                                gameManagement.startGame();
+                            } else {
+                                console.log("Must be a Single Character");
+                                resetForms();
+                            }
+                        } else {
+                            console.log("Must be a Single Character");
+                            resetForms();
+                        }
+                    } else {
+                        console.log("Cant have the same Symbol");
+                        resetForms();
+                    }
+                } else {
+                    console.log("Cant have the same Name");
+                    resetForms();
+                }
+            }
+        } else {
+                if (p1Name !== ""){ player1.name = p1Name; }
+                if (p1Symbol !== ""){ player1.symbol = p1Symbol; }
+
+                player2.name = "ai";
+                if (p1Symbol === "x"){
+                    player2.symbol = "o";
+                } else {
+                    player2.symbol = "x";
+                }
+                gameManagement.startGame();
         }
     }
 
-    return { vsPlayer, startGame };
+    const resetForms = () =>{
+        document.getElementById("P1Name").value = "";
+        document.getElementById("P1Symbol").value = "";
+        document.getElementById("P2Name").value = "";
+        document.getElementById("P2Symbol").value = "";
+    }
+
+    return { vsPlayer, gameInfo, resetForms };
 })();
 
 const getBoardElement = () => {
@@ -85,34 +145,80 @@ const getBoardElement = () => {
         gridItems[x] = document.getElementById("grid" + x);
         let location = x;
         gridItems[x].addEventListener("click", function() {
-            gameManagement.updateBoard(location);
             this.removeEventListener('click', arguments.callee);
-          });
+            gameManagement.updateBoard(location);
+        });
         x++;
     };
 };
 
 const gameManagement = (() => {
+    const startGame = () => {
+        player = player1;
+        startPlayer = player1;
+        document.getElementById("indexMain").classList.add("toGamePage");
+        p1Score.innerText = player1.name + ": " + score[0];
+        p2Score.innerText = player2.name + ": " + score[1];
+        getBoardElement();
+    }
+
+    const resetGame = () => {
+        resetBoard();
+        if (startPlayer === player1) {
+            startPlayer = player2;
+        } else {
+            startPlayer = player1;
+        }
+        getBoardElement();
+    }
+
     const resetBoard = () => {
         for (let i = 0; i < boardValues.length; i++) {
+            var grid = document.getElementById("grid" + i);
             boardValues[i] = "";
+            grid.remove();
+            var gridToAdd = document.createElement("div");
+            gridToAdd.className = "singleGrid emptyGrid";
+            gridToAdd.id = "grid" + i;
+            gridToAdd.addEventListener("click", function() {
+                this.removeEventListener('click', arguments.callee);
+                gameManagement.updateBoard(location);
+            });
+
+            gridContainer.appendChild(gridToAdd);
         }
     }
 
     const updateBoard = (location) => {
-        var grid = document.getElementById("grid" + location);
         boardValues[location] = player.name;
-        grid.classList.add("full");
-        grid.classList.add(player.name);
+        var grid = document.getElementById("grid" + location);
+        try {
+            grid.classList.add("full");
+            grid.classList.add(player.name);
+        } catch {
+            return;
+        }
+
         grid.removeEventListener("click", function() {
             clickGrid(location);
-          });
+        });
+        grid.innerText = player.symbol;
         checkForWin(location);
+        changePlayer();
+
+        // if (player === player1){
+        //     checkForWin(location);
+        //     player = player2;
+        // }else {
+        //     checkForWin(location);
+        //     player = player1;
+        // }
+    }
+
+    const changePlayer = () => {
         if (player === player1){
-            grid.innerText = player1.symbol;
             player = player2;
-        }else {
-            grid.innerText = player2.symbol;
+        } else {
             player = player1;
         }
     }
@@ -134,11 +240,44 @@ const gameManagement = (() => {
                     }
                 } 
                 if (winCheck == 3){
-                    document.location.href = "html/winpage.html";
+                    resetGame();
+                    if (player === player1){
+                        score[0] += 1;
+                    } else {
+                        score[1] += 1;
+                    }
+                    p1Score.innerText = player1.name + ": " + score[0];
+                    p2Score.innerText = player2.name + ": " + score[1];
                 }
             }
         }
+
+        if (!boardValues.includes("")){
+            console.log("Draw");
+            resetGame();
+            score[0] += 1;
+            score[1] += 1;
+            p1Score.innerText = player1.name + ": " + score[0];
+            p2Score.innerText = player2.name + ": " + score[1];
+        }
     }
 
-    return {resetBoard, updateBoard, checkForWin};
+    return {startGame, resetGame, resetBoard, updateBoard, changePlayer, checkForWin};
 })();
+
+const AI = (() => {
+    const aiDifficulty = () => {
+
+    }
+
+    const aiMove = () => {
+        // Search Depth changes according to difficulty
+        if (boardValues.includes(player1.name) || boardValues.includes(player2.name)) {
+
+        } else {
+            boardValues[0] = player2.name;
+        }
+    }
+
+    return {aiDifficulty, aiMove};
+});
