@@ -273,51 +273,6 @@ const gameManagement = (() => {
         }
         return null;
     }
-
-
-    // const checkForWin = (location) => {
-    //     // iterate through each possible win
-    //     for (let oi = 0; oi < possibleWins.length; oi++) {
-    //         let winCondition = possibleWins[oi];
-    //         // Only search the ones the user just clicked - makes it more efficient 
-    //         if (winCondition.includes(location) || location === null){
-    //             let winCheck = 0;
-    //             // Check each value in the possible win array 
-    //             for (let ii = 0; ii < possibleWins[oi].length; ii++){
-    //                 let gridValueToCheck = possibleWins[oi][ii];
-    //                 console.log(boardValues[gridValueToCheck])
-    //                 if (boardValues[gridValueToCheck] == player.name){
-    //                     winCheck++
-    //                 } else {
-    //                     break;
-    //                 }
-    //             } 
-    //             if (winCheck == 3){
-    //                 return player.name;
-    //                 // resetGame();
-    //                 if (player === player1){
-    //                     score[0] += 1;
-    //                 } else {
-    //                     score[1] += 1;
-    //                 }
-    //                 p1Score.innerText = player1.name + ": " + score[0];
-    //                 p2Score.innerText = player2.name + ": " + score[1];
-    //             }
-    //         }
-    //     }
-
-    //     if (!boardValues.includes("") && location !== false){
-    //         return "draw";
-            
-    //         // resetGame();
-    //         score[0] += 1;
-    //         score[1] += 1;
-    //         p1Score.innerText = player1.name + ": " + score[0];
-    //         p2Score.innerText = player2.name + ": " + score[1];
-    //     }
-    //     return null;
-    // }
-
     return {startGame, resetGame, resetBoard, updateBoard, changePlayer, checkForWin};
 })();
 
