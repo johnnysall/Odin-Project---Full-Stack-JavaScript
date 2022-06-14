@@ -200,6 +200,7 @@ body {
 
 .emptyGrid:hover {
     background-color: var(--alternateColour);
+    cursor: pointer;
 }
 
 .full {

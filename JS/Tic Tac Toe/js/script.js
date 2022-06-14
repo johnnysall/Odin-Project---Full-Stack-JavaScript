@@ -194,10 +194,15 @@ const gameManagement = (() => {
     }
 
     const updateBoard = (location) => {
-        console.log(location);
-        boardValues[location] = player.name;
+        if (boardValues[location] === "") {
+            boardValues[location] = player.name;
+        } else {
+            return;
+        }
+        
         var grid = document.getElementById("grid" + location);
         try {
+            grid.classList.remove("emptyGrid");
             grid.classList.add("full");
             grid.classList.add(player.name);
         } catch {
@@ -205,77 +210,113 @@ const gameManagement = (() => {
         }
 
         grid.removeEventListener("click", function() {
-            clickGrid(location);
+            this.removeEventListener('click', arguments.callee);
+            gameManagement.updateBoard(location);
         });
         grid.innerText = player.symbol;
-        checkForWin(location);
+        var result = checkForWin(boardValues);
+        if (result !== null){
+            if (result === "draw") {
+                score[0] += 1;
+                score[1] += 1;
+                p1Score.innerText = player1.name + ": " + score[0];
+                p2Score.innerText = player2.name + ": " + score[1];
+                resetGame();
+            } else {
+                if (result === player1.name){
+                    score[0] += 1;
+                } else {
+                    score[1] += 1;
+                }
+                p1Score.innerText = player1.name + ": " + score[0];
+                p2Score.innerText = player2.name + ": " + score[1];
+                resetGame();
+            }
+        }
         changePlayer();
-
-        // if (player === player1){
-        //     checkForWin(location);
-        //     player = player2;
-        // }else {
-        //     checkForWin(location);
-        //     player = player1;
-        // }
     }
 
     const changePlayer = () => {
         if (player === player1){
             player = player2;
-            AI.bestMove();
+            if (againstAI === true) {
+                AI.bestMove();
+            }
         } else {
             player = player1;
         }
     }
 
-    const checkForWin = (location) => {
+
+    const checkForWin = (boardToCheck) => {
         // iterate through each possible win
         for (let oi = 0; oi < possibleWins.length; oi++) {
-            let winCondition = possibleWins[oi];
             // Only search the ones the user just clicked - makes it more efficient 
-            if (winCondition.includes(location) || location === null){
-                console.log("2");
-                let winCheck = 0;
-                // Check each value in the possible win array 
-                for (let ii = 0; ii < possibleWins[oi].length; ii++){
-                    console.log("3");
-                    let gridValueToCheck = possibleWins[oi][ii];
-                    if (boardValues[gridValueToCheck] == player.name){
-                        console.log("4");
-                        winCheck++
-                    } else {
-                        break;
+            let winCheck = 0;
+            // Check each value in the possible win array 
+            for (let ii = 0; ii < possibleWins[oi].length; ii++){
+                // Find the player that may have one
+                let playerToCheck = boardValues[possibleWins[oi][0]];
+                if (boardToCheck[possibleWins[oi][ii]] === playerToCheck && playerToCheck !== ""){
+                    winCheck++
+                    if (winCheck == 3){
+                        return playerToCheck;
                     }
-                } 
-                if (winCheck == 3){
-                    console.log("winner");
-                    return player;
-                    // resetGame();
-                    if (player === player1){
-                        score[0] += 1;
-                    } else {
-                        score[1] += 1;
-                    }
-                    p1Score.innerText = player1.name + ": " + score[0];
-                    p2Score.innerText = player2.name + ": " + score[1];
+                } else {
+                    break;
                 }
-            }
-        }
+            } 
 
-        if (!boardValues.includes("") && location !== false){
-            console.log("Draw");
-            return "draw";
-            
-            // resetGame();
-            score[0] += 1;
-            score[1] += 1;
-            p1Score.innerText = player1.name + ": " + score[0];
-            p2Score.innerText = player2.name + ": " + score[1];
         }
-        console.log("null");
+        if (!boardToCheck.includes("")){
+            return "draw";
+        }
         return null;
     }
+
+
+    // const checkForWin = (location) => {
+    //     // iterate through each possible win
+    //     for (let oi = 0; oi < possibleWins.length; oi++) {
+    //         let winCondition = possibleWins[oi];
+    //         // Only search the ones the user just clicked - makes it more efficient 
+    //         if (winCondition.includes(location) || location === null){
+    //             let winCheck = 0;
+    //             // Check each value in the possible win array 
+    //             for (let ii = 0; ii < possibleWins[oi].length; ii++){
+    //                 let gridValueToCheck = possibleWins[oi][ii];
+    //                 console.log(boardValues[gridValueToCheck])
+    //                 if (boardValues[gridValueToCheck] == player.name){
+    //                     winCheck++
+    //                 } else {
+    //                     break;
+    //                 }
+    //             } 
+    //             if (winCheck == 3){
+    //                 return player.name;
+    //                 // resetGame();
+    //                 if (player === player1){
+    //                     score[0] += 1;
+    //                 } else {
+    //                     score[1] += 1;
+    //                 }
+    //                 p1Score.innerText = player1.name + ": " + score[0];
+    //                 p2Score.innerText = player2.name + ": " + score[1];
+    //             }
+    //         }
+    //     }
+
+    //     if (!boardValues.includes("") && location !== false){
+    //         return "draw";
+            
+    //         // resetGame();
+    //         score[0] += 1;
+    //         score[1] += 1;
+    //         p1Score.innerText = player1.name + ": " + score[0];
+    //         p2Score.innerText = player2.name + ": " + score[1];
+    //     }
+    //     return null;
+    // }
 
     return {startGame, resetGame, resetBoard, updateBoard, changePlayer, checkForWin};
 })();
@@ -292,7 +333,7 @@ const AI = (() => {
         for (let i = 0; i < boardValues.length; i++){
             if (boardValues[i] === ""){
                 boardValues[i] = player2.name;
-                let score = miniMax(boardValues, true, 0);
+                let score = miniMax(boardValues, false, 0);
                 boardValues[i] = "";
 
                 if (score > bestScore) {
@@ -304,17 +345,16 @@ const AI = (() => {
         gameManagement.updateBoard(move);
     }
 
-    let scores = {
-        player1 : -1,
-        player2 : 1,
-        "draw" : 0
-    };
-
     const miniMax = (board, isMaximising, depth) => {
-        let result = gameManagement.checkForWin(null);
+        let result = gameManagement.checkForWin(board);
         if (result !== null) {
-            console.log("scores[result]" + scores[result]);
-            return scores[result];
+            if (result === "draw"){
+                return 0;
+            } if (result === "ai"){
+                return 100-depth;
+            } else {
+                return -100+depth;
+            } 
         }
 
         if (isMaximising === true) {
@@ -337,7 +377,7 @@ const AI = (() => {
                     board[i] = player1.name;
                     let score = miniMax(board, true, depth + 1);
                     board[i] = "";
-                    if (score > bestScore) {
+                    if (score < bestScore) {
                         bestScore = score;
                     }
                 }
