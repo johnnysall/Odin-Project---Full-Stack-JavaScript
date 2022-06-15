@@ -26,6 +26,9 @@ const p1DetailsContainer = document.getElementById("p1Container");
 const p2DetailsContainer = document.getElementById("p2Container");
 const playerAITitle = document.getElementById("playerAITitle");
 
+const scoreVisualiser = document.getElementById("scoreVisualiser");
+const p1ScoreVis = document.getElementById("p1ScoreVis");
+const p2ScoreVis = document.getElementById("p2ScoreVis");
 const p1Score = document.getElementById("p1Score");
 const p2Score = document.getElementById("p2Score");
 let score = [0,0];
@@ -179,6 +182,18 @@ const gameManagement = (() => {
         winnerText.innerText = winner;
     }
 
+    const changeScoreVisualiser = () => {
+        if (score[0] === 0) {
+            p1ScoreVis.style.width = "0%";
+            p2ScoreVis.style.width = "100%";
+        } else {
+            let totalPlays = score[0] + score[1];
+            let p1Percent = (100/totalPlays)*score[0];
+            p1ScoreVis.style.width = p1Percent + "%";
+            p2ScoreVis.style.width = (100 - p1Percent) + "%";
+        }
+    }
+
     const resetGame = () => {
         gameWinner.style.display = "none";
         resetBoard();
@@ -239,6 +254,7 @@ const gameManagement = (() => {
                 score[1] += 1;
                 p1Score.innerText = player1.name + ": " + score[0];
                 p2Score.innerText = player2.name + ": " + score[1];
+                changeScoreVisualiser();
                 showGameWinner("Draw!");
             } else {
                 if (result === player1.name){
@@ -248,6 +264,7 @@ const gameManagement = (() => {
                 }
                 p1Score.innerText = player1.name + ": " + score[0];
                 p2Score.innerText = player2.name + ": " + score[1];
+                changeScoreVisualiser();
                 showGameWinner(player.name + " Wins!");
             }
         }
@@ -295,10 +312,6 @@ const gameManagement = (() => {
 })();
 
 const AI = (() => {
-    const aiDifficulty = () => {
-
-    }
-
     const bestMove = () => {
         let bestScore = -Infinity;
         let move;
@@ -385,5 +398,5 @@ const AI = (() => {
         }
     }
 
-    return {aiDifficulty, bestMove, miniMax, aiMove};
+    return {bestMove, miniMax, aiMove};
 })();

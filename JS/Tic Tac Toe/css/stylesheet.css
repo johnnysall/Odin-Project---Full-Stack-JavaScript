@@ -62,6 +62,8 @@ table {
     --highlightColour: rgb(58, 212, 38);
     --fontFam: 'Dosis', sans-serif;
     --fontCol: rgb(231, 231, 231);
+    --p1Col: rgb(82, 85, 255);
+    --p2Col: rgb(255, 82, 82);
 }
 
 html {
@@ -131,7 +133,9 @@ body {
     font-family: var(--fontFam);
     width: 100%;
     float: left;
-    height: 60px;
+    height: 80px;
+    display: block;
+    box-sizing:border-box;
 }
 
 #scoreText {
@@ -155,6 +159,32 @@ body {
 
 #p2Score {
     margin-right: 20%;
+}
+
+#scoreVisualiser {
+    height: 5px;
+    width: 50%;
+    background-color: var(--fontCol);
+    float: left;
+    display: block;
+    box-sizing:border-box;
+    margin: 10px 25%;
+}
+
+#p1ScoreVis,
+#p2ScoreVis {
+    width: 50%;
+    height: 5px;
+    float: left;
+    transition: 500ms linear;
+}
+
+#p1ScoreVis {
+    background-color: var(--p1Col);
+}
+
+#p2ScoreVis {
+    background-color: var(--p2Col);
 }
 
 #resetBtn {
@@ -210,22 +240,31 @@ body {
 #gameWinner {
     width: 100%;
     height: 100%;
-    background-color: rgba(5, 5, 5, 0.5);
+    background-color: rgba(5, 5, 5, 0.75);
     position: absolute;
     top: 0;
     z-index:2;
-    color: var(--fontCol);
-    font: var(--fontFam);
-    font-size: 40px;
 }
 
 #winnerText {
     width: 100%;
     height: 100%;
+    font-size: 50px;
+    font-family: var(--fontFam);
+    color: var(--fontCol);
 
     display: flex;
     justify-content: center;
     align-items: center;
+
+    animation-name: openModal;
+    animation-duration: 500ms;  
+    animation-fill-mode: forwards; 
+}
+
+@keyframes openModal {
+    from {font-size: 0px;}
+    to {font-size: 50px;}
 }
 
 /* Index Page */
@@ -306,6 +345,10 @@ body {
     width: 70px;
     height: 70px;
     margin: 5%;
+}
+
+form {
+    font-family: var(--fontFam);
 }
 
 input[type=text], select {
