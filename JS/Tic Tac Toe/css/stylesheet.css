@@ -207,6 +207,27 @@ body {
     background-color: var(--alternateColour);
 }
 
+#gameWinner {
+    width: 100%;
+    height: 100%;
+    background-color: rgba(5, 5, 5, 0.5);
+    position: absolute;
+    top: 0;
+    z-index:2;
+    color: var(--fontCol);
+    font: var(--fontFam);
+    font-size: 40px;
+}
+
+#winnerText {
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 /* Index Page */
 
 #indexMain {

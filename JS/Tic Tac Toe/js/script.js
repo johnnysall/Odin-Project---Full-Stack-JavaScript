@@ -30,6 +30,12 @@ const p1Score = document.getElementById("p1Score");
 const p2Score = document.getElementById("p2Score");
 let score = [0,0];
 
+const winnerText = document.getElementById("winnerText");
+const gameWinner = document.getElementById("gameWinner");
+gameWinner.addEventListener("click", function() {
+    gameManagement.resetGame();
+});
+
 const gameBoard = ["0","1","2","3","4","5","6","7","8"];
 const boardValues = ["", "", "", "", "", "", "", "", ""];
 // All Possible ways of winning the game
@@ -160,18 +166,30 @@ const gameManagement = (() => {
     const startGame = () => {
         player = player1;
         startPlayer = player1;
+
+        gameWinner.style.display = "none";
         document.getElementById("indexMain").classList.add("toGamePage");
         p1Score.innerText = player1.name + ": " + score[0];
         p2Score.innerText = player2.name + ": " + score[1];
         getBoardElement();
     }
 
+    const showGameWinner = (winner) => {
+        gameWinner.style.display = "block";
+        winnerText.innerText = winner;
+    }
+
     const resetGame = () => {
+        gameWinner.style.display = "none";
         resetBoard();
         if (startPlayer === player1) {
             startPlayer = player2;
         } else {
             startPlayer = player1;
+        }
+        player = startPlayer;
+        if (againstAI === true && player === player2) {
+            AI.bestMove();
         }
         getBoardElement();
     }
@@ -221,7 +239,7 @@ const gameManagement = (() => {
                 score[1] += 1;
                 p1Score.innerText = player1.name + ": " + score[0];
                 p2Score.innerText = player2.name + ": " + score[1];
-                resetGame();
+                showGameWinner("Draw!");
             } else {
                 if (result === player1.name){
                     score[0] += 1;
@@ -230,7 +248,7 @@ const gameManagement = (() => {
                 }
                 p1Score.innerText = player1.name + ": " + score[0];
                 p2Score.innerText = player2.name + ": " + score[1];
-                resetGame();
+                showGameWinner(player.name + " Wins!");
             }
         }
         changePlayer();
@@ -273,7 +291,7 @@ const gameManagement = (() => {
         }
         return null;
     }
-    return {startGame, resetGame, resetBoard, updateBoard, changePlayer, checkForWin};
+    return {startGame, showGameWinner, resetGame, resetBoard, updateBoard, changePlayer, checkForWin};
 })();
 
 const AI = (() => {
