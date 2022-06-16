@@ -123,8 +123,9 @@ const gameSetup = (() => {
                         resetForms();
                     }
                 } else {
+                    document.getElementById("P1Name").setCustomValidity("I expect an e-mail, darling!");
                     console.log("Cant have the same Name");
-                    resetForms();
+                    //resetForms();
                 }
             }
         } else {
