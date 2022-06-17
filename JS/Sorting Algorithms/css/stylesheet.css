@@ -1,0 +1,141 @@
+/* http://meyerweb.com/eric/tools/css/reset/ 
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+body {
+	line-height: 1;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+
+
+
+@font-face {
+    font-family: Norse-Bold;
+    src: url("../Fonts/Norse-Bold.otf") format("opentype");
+}
+
+
+:root {
+    --backColour: rgb(252, 252, 252);
+    --alternateColour: rgb(196, 196, 196);
+    --highlightColour: rgb(58, 212, 38);
+    --fontFam: 'Dosis', sans-serif;
+    --fontCol: rgb(231, 231, 231);
+    --p1Col: rgb(82, 85, 255);
+    --p2Col: rgb(255, 82, 82);
+}
+
+html {
+    background-color: var(--backColour);
+    overflow-y: hidden;
+}
+
+body {
+    background-color: var(--backColour);
+    width: 100vw;
+    height: 100vh;
+    overflow-y: hidden;
+}
+
+#arrayContainer {
+    width: 80%;
+    height: 140px;
+    margin: 2% 10%;
+
+    transition-duration:1s;
+    -webkit-transition-duration:1s;
+}
+
+.arrayItem {
+    float: left;
+    height: 70px;
+    border: solid thin var(--backColour);
+    background-color: var(--alternateColour);
+    box-sizing: border-box;
+    transition: top 1s ease-out;
+    position: relative;
+    top: 0px;
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.up {
+    animation: 1s linear .1s moveUp forwards;
+}
+
+@keyframes moveUp {
+    from {margin-bottom: 0px;}
+    to {margin-bottom: 70px;}
+}
+
+.right {
+    animation: 1s linear .1s moveRight forwards;
+}
+
+@keyframes moveRight {
+    from {margin-left: 0px;}
+    to {margin-left: 70px;}
+}
+
+.down {
+    transform: translate(0, 100px);
+    /* animation: 1s linear .1s moveDown forwards; */
+}
+
+@keyframes moveDown {
+    from {margin-top: 0px;}
+    to {margin-top: 70px;}
+}
+
+.left {
+    animation: 1s linear .1s moveLeft forwards;
+}
+
+@keyframes moveLeft {
+    from {margin-right: 0px;}
+    to {margin-right: 70px;}
+}
+
