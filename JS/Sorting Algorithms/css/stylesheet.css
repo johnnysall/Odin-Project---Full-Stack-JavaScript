@@ -96,46 +96,31 @@ body {
     transition: top 1s ease-out;
     position: relative;
     top: 0px;
+    font-size: 90%;
     
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-.up {
-    animation: 1s linear .1s moveUp forwards;
+.arrayContainer {
+    display: grid;
+    grid-template-rows: 2fr 1fr 2fr;
 }
 
-@keyframes moveUp {
-    from {margin-bottom: 0px;}
-    to {margin-bottom: 70px;}
+#visualArrayContainer {
+    width: 80%;
+    height: 50vh;
+    margin: 2% 10%;
+
+    display: grid;
+    grid-template-rows: 1fr;
+    grid-template-columns: auto;
 }
 
-.right {
-    animation: 1s linear .1s moveRight forwards;
-}
-
-@keyframes moveRight {
-    from {margin-left: 0px;}
-    to {margin-left: 70px;}
-}
-
-.down {
-    transform: translate(0, 100px);
-    /* animation: 1s linear .1s moveDown forwards; */
-}
-
-@keyframes moveDown {
-    from {margin-top: 0px;}
-    to {margin-top: 70px;}
-}
-
-.left {
-    animation: 1s linear .1s moveLeft forwards;
-}
-
-@keyframes moveLeft {
-    from {margin-right: 0px;}
-    to {margin-right: 70px;}
+.visArrayItem {
+    background-color: var(--alternateColour);
+    border: solid thin var(--backColour);
+    box-sizing: border-box;
 }
 
