@@ -39,11 +39,13 @@ const setup = (() => {
             // Create visualisation for array
             const visArrayItem = document.createElement("div");
             visArrayItem.classList.add("visArrayItem");
-            visArrayItem.classList.add("number"+arr[i]);
-            visArrayItem.classList.add("index"+i);
+            visArrayItem.classList.add("visNumber"+arr[i]);
+            visArrayItem.classList.add("visIndex"+i);
+            visArrayItem.id = "visIndex" + i;
+            // visArrayItem.innerText = arr[i];
             visArrayItem.style.height = arr[i] + "%";
-            visArrayItem.style.width = (100/(arrayLength+1)) + "%";
-            visArrayItem.style.left = (i * (100/(arrayLength+1))) + "%";
+            visArrayItem.style.width = (100/(arrayLength)) + "%";
+            visArrayItem.style.left = (i * (100/(arrayLength))) + "%";
             // visArrayItem.style.gridRow = "1";
             // visArrayItem.style.gridColumn = i+1;
             // visArrayItem.style.marginBottom = (100 - arrayToSort[i]) + "%";
@@ -146,63 +148,36 @@ async function insertionSort(arr, len) {
 
 const bubbleSort = (() => {
     function swap (arr, num1, num2, index) {
-        console.log("SWAP");
         arr[index] = num2;
         arr[index + 1] = num1;
 
-        const num1ToSwap = document.getElementsByClassName("number" + num1);
-        const num2ToSwap = document.getElementsByClassName("number" + num2);
+        const num1ToSwap = document.getElementById("visIndex" + (index));
+        const num2ToSwap = document.getElementById("visIndex" + (index+1));
 
-        const transform1 = num1ToSwap[1].getPropertyValue("left");
-        const transform2 = num2ToSwap[1].getPropertyValue("left");
-    
-        // num1ToSwap[0].style.gridColumn = j+1;
-        num1ToSwap[1].style.left = transform2;
-        // // num2ToSwap[0].style.gridColumn = j;
-        num2ToSwap[1].style.left = transform1;
-
-        // return new Promise(resolve => {
-        //     const num1ToSwap = document.getElementsByClassName("number" + num1);
-        //     const num2ToSwap = document.getElementsByClassName("number" + num2);
-    
-        //     const transform1 = await num1ToSwap.getPropertyValue("left");
-        //     const transform2 = await num2ToSwap.getPropertyValue("left");
-        
-        //     // num1ToSwap[0].style.gridColumn = j+1;
-        //     num1ToSwap[1].style.left = transform2;
-        //     // // num2ToSwap[0].style.gridColumn = j;
-        //     num2ToSwap[1].style.left = transform1;
-
-        //     // Wait for the transition to end!
-        //     window.requestAnimationFrame(function() {
-        //         setTimeout(() => {
-        //             container.insertBefore(el2, el1);
-        //             resolve();
-        //         }, 250);
-        //     });
-        // });
+        num1ToSwap.style.left = ((index+1) * (100/(arrayLength))) + "%";
+        num1ToSwap.id = "visIndex" + (index + 1);
+        num1ToSwap.style.backgroundColor = "red";
+        num2ToSwap.style.left = (index * (100/(arrayLength))) + "%";
+        num2ToSwap.id = "visIndex" + index;
+        num2ToSwap.style.backgroundColor = "yellow";
 
     }
 
     async function bubbleSort(arr, len) {
-        let i, j, num1ToSwap, num2ToSwap;
+        let i, j;
         
         for (i=0; i < len-1; i++) {
-            const numToBeSorted = document.getElementsByClassName("index" + i);
-            numToBeSorted[0].style.backgroundColor = "yellow";
-            numToBeSorted[1].style.backgroundColor = "yellow";
-
             for (j=0; j < len-i-1; j++){
                 if (arr[j] > arr[j+1]) {
                     await swap(arr, arr[j], arr[j+1], j);
                 }
-                // setup.presentArray(arr);
-                await sleep(1000);
+                await sleep(1);
             }
-            const sortedNum = document.getElementsByClassName("index" + j);
-            sortedNum[0].style.backgroundColor = "green";
-            sortedNum[1].style.backgroundColor = "green";
+            const visSortedNum = document.getElementById("visIndex" + j);
+            visSortedNum.style.backgroundColor = "green";
         }
+        const visSortedNum = document.getElementById("visIndex0");
+        visSortedNum.style.backgroundColor = "green";
     }
 
     return { swap, bubbleSort };

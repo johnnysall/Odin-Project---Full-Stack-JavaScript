@@ -127,6 +127,6 @@ body {
     position: absolute;
     left: 0;
     bottom: 0;
-    transition: 0.2s all ease;
+    /* transition: 0.2s all ease; */
 }
 
