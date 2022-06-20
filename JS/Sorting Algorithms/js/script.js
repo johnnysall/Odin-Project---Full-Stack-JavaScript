@@ -1,4 +1,4 @@
-let arrayLength = 6;
+let arrayLength = 50;
 
 // First Nested is the sorted subarray, Second Nested is unsorted subarray
 let arrayToSort = [[],[]];
@@ -21,24 +21,31 @@ const setup = (() => {
         arrayContainer.innerHTML = "";
     }
 
-    const presentArray = () => {
-        for (let i = 0; i < arrayLength; i++) {
+    const presentArray = (arr) => {
+        arrayContainer.innerHTML = "";
+        visualArrayContainer.innerHTML = "";
+        for (let i = 0; i < arr.length; i++) {
             // Show List of numbers in array
             const arrayItem = document.createElement("div");
             arrayItem.classList.add("arrayItem");
-            arrayItem.classList.add("number"+arrayToSort[1][i]);
+            arrayItem.classList.add("number"+arr[i]);
             arrayItem.classList.add("index"+i);
-            arrayItem.innerText = arrayToSort[1][i];
+            arrayItem.innerText = arr[i];
+            arrayItem.style.gridRow = "1";
+            arrayItem.style.gridColumn = i+1;
             arrayContainer.appendChild(arrayItem);
 
 
             // Create visualisation for array
             const visArrayItem = document.createElement("div");
-            visArrayItem.classList.add("arrayItem");
-            visArrayItem.classList.add("number"+arrayToSort[1][i]);
+            visArrayItem.classList.add("visArrayItem");
+            visArrayItem.classList.add("number"+arr[i]);
             visArrayItem.classList.add("index"+i);
-            visArrayItem.style.height = arrayToSort[1][i] + "%";
-            visArrayItem.style.gridRow = "1";
+            visArrayItem.style.height = arr[i] + "%";
+            visArrayItem.style.width = (100/(arrayLength+1)) + "%";
+            visArrayItem.style.left = (i * (100/(arrayLength+1))) + "%";
+            // visArrayItem.style.gridRow = "1";
+            // visArrayItem.style.gridColumn = i+1;
             // visArrayItem.style.marginBottom = (100 - arrayToSort[i]) + "%";
             visualArrayContainer.appendChild(visArrayItem);
         }
@@ -122,10 +129,6 @@ async function selectionSortFunc() {
     }
 }
 
-function shiftList() {
-
-}
-
 async function insertionSort(arr, len) {
     let i, j, key;
 
@@ -139,24 +142,66 @@ async function insertionSort(arr, len) {
         } 
         arr[j + 1] = key; 
     }
-    return arr;
 }
 
 const bubbleSort = (() => {
-    const swap = (arr, num1, num2, index) => {
+    function swap (arr, num1, num2, index) {
+        console.log("SWAP");
         arr[index] = num2;
         arr[index + 1] = num1;
+
+        const num1ToSwap = document.getElementsByClassName("number" + num1);
+        const num2ToSwap = document.getElementsByClassName("number" + num2);
+
+        const transform1 = num1ToSwap[1].getPropertyValue("left");
+        const transform2 = num2ToSwap[1].getPropertyValue("left");
+    
+        // num1ToSwap[0].style.gridColumn = j+1;
+        num1ToSwap[1].style.left = transform2;
+        // // num2ToSwap[0].style.gridColumn = j;
+        num2ToSwap[1].style.left = transform1;
+
+        // return new Promise(resolve => {
+        //     const num1ToSwap = document.getElementsByClassName("number" + num1);
+        //     const num2ToSwap = document.getElementsByClassName("number" + num2);
+    
+        //     const transform1 = await num1ToSwap.getPropertyValue("left");
+        //     const transform2 = await num2ToSwap.getPropertyValue("left");
+        
+        //     // num1ToSwap[0].style.gridColumn = j+1;
+        //     num1ToSwap[1].style.left = transform2;
+        //     // // num2ToSwap[0].style.gridColumn = j;
+        //     num2ToSwap[1].style.left = transform1;
+
+        //     // Wait for the transition to end!
+        //     window.requestAnimationFrame(function() {
+        //         setTimeout(() => {
+        //             container.insertBefore(el2, el1);
+        //             resolve();
+        //         }, 250);
+        //     });
+        // });
+
     }
 
     async function bubbleSort(arr, len) {
-        let i, j;
+        let i, j, num1ToSwap, num2ToSwap;
         
         for (i=0; i < len-1; i++) {
+            const numToBeSorted = document.getElementsByClassName("index" + i);
+            numToBeSorted[0].style.backgroundColor = "yellow";
+            numToBeSorted[1].style.backgroundColor = "yellow";
+
             for (j=0; j < len-i-1; j++){
                 if (arr[j] > arr[j+1]) {
-                    swap(arr, arr[j], arr[j+1], j);
+                    await swap(arr, arr[j], arr[j+1], j);
                 }
+                // setup.presentArray(arr);
+                await sleep(1000);
             }
+            const sortedNum = document.getElementsByClassName("index" + j);
+            sortedNum[0].style.backgroundColor = "green";
+            sortedNum[1].style.backgroundColor = "green";
         }
     }
 
@@ -175,18 +220,12 @@ const mergeSort = (() => {
         var lArray = new Array(l1);
         var rArray = new Array(l2);
 
-        console.log("Arr: " + arr)
         for (i = 0; i < l1; i++) {
-            console.log("arr[l+i] " + arr[l+i])
             lArray[i] = arr[l+i];
         }
         for (j = 0; j < l2; j++) {
-            console.log("arr[m+1+j] " + arr[m+1+j])
-            rArray[i] = arr[m+1+j];
+            rArray[j] = arr[m+1+j];
         }
-
-        console.log("rArray: " + rArray);        console.log("rArray: " + rArray);
-        console.log("lArray: " + lArray);
 
         // Starting Index for first sub array
         var i = 0;
@@ -216,7 +255,6 @@ const mergeSort = (() => {
             j++ 
             k++
         }
-
     }
 
     async function mergeSort(arr, l, r) {
@@ -227,8 +265,6 @@ const mergeSort = (() => {
         var m = l + parseInt((r-l)/2);
         mergeSort(arr,l,m);
         mergeSort(arr,m+1,r);
-        console.log("arr " + arr + " l: " + l + " m: " + m + " r: " + r)
-
         merge(arr,l,m,r);
     }
 
@@ -239,14 +275,41 @@ const mergeSort = (() => {
     return { merge, mergeSort, begin };
 })();
 
-const quickSort = () => {
-    
-}
+const quickSort = (() => {
+    function swap (arr, i, j) {
+        let temp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = temp;
+    }
 
-setup.presentArray();
+    function partition (arr, low, high) {
+        let pivot = arr[high];
+        let i = (low - 1);
+
+        for (let j = low; j <= high-1; j++) {
+            if (arr[j] < pivot) {
+                i++
+                swap(arr, i, j);
+            }
+        }
+        swap(arr, i+1, high);
+        return(i+1);
+    }
+
+    function quickSort (arr, low, high) {
+        if (low < high) {
+            let pi = partition(arr, low, high);
+            quickSort(arr, low, pi - 1);
+            quickSort(arr, pi + 1, high);
+        }
+    }
+
+    return { swap, partition, quickSort }
+})();
+
+setup.presentArray(arrayToSort[1]);
 // selectionSortFunc();
 // insertionSort(arrayToSort[1], arrayLength);
-// bubbleSort.bubbleSort(arrayToSort[1], arrayLength);
-mergeSort.mergeSort(arrayToSort[1], 0, arrayToSort[1].length - 1)
-
-
+bubbleSort.bubbleSort(arrayToSort[1], arrayLength);
+// mergeSort.mergeSort(arrayToSort[1], 0, arrayToSort[1].length - 1);
+// quickSort.quickSort(arrayToSort[1], 0, arrayToSort[1].length - 1);

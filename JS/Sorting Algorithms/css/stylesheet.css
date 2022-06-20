@@ -103,15 +103,16 @@ body {
     align-items: center;
 }
 
-.arrayContainer {
+/* .arrayContainer {
     display: grid;
     grid-template-rows: 2fr 1fr 2fr;
-}
+} */
 
 #visualArrayContainer {
     width: 80%;
     height: 50vh;
     margin: 2% 10%;
+    position: relative;
 
     display: grid;
     grid-template-rows: 1fr;
@@ -122,5 +123,10 @@ body {
     background-color: var(--alternateColour);
     border: solid thin var(--backColour);
     box-sizing: border-box;
+
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    transition: 0.2s all ease;
 }
 
