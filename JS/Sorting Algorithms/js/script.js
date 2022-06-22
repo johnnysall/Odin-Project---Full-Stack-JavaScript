@@ -1,4 +1,4 @@
-let arrayLength = 100;
+let arrayLength = 300;
 
 // First Nested is the sorted subarray, Second Nested is unsorted subarray
 let arrayToSort = [[],[]];
@@ -12,7 +12,7 @@ visualArrayContainer.style.gridTemplateColumns = "auto";
 const arrayContainer = document.getElementById("arrayContainer");
 arrayContainer.style.gridTemplateColumns = "repeat(" + arrayLength + ", 1fr)";
 
-let sleepTime = 10;
+let sleepTime = 3;
 
 function sleep () {
     return new Promise((resolve) => setTimeout(resolve, sleepTime));
@@ -81,60 +81,44 @@ const setup = (() => {
     return { clearArray, presentArray, moveItem };
 })();
 
-async function selectionSortFunc() {
-    for (let i = 0; i < arrayLength; i++) {
-        let smallestNum = 3434;
-        let smallestNumIndex = 0;
-
-        for (let x = 0; x < arrayToSort[1].length; x++) {
-            if (arrayToSort[1][x] !== Infinity){
-                const arrayItem = document.getElementsByClassName("index" + x);
-                arrayItem[0].style.backgroundColor = "yellow";
-                arrayItem[1].style.backgroundColor = "yellow";
-            }
-
-            if (smallestNum > arrayToSort[1][x] && smallestNum !== Infinity) {
-                if (arrayToSort[1][smallestNumIndex] !== Infinity) {
-                    const oldSmallestNumber = document.getElementsByClassName("index" + smallestNumIndex);
-                    oldSmallestNumber[0].style.backgroundColor = "yellow";
-                    oldSmallestNumber[1].style.backgroundColor = "yellow";
+const selectionSort = (() => {
+    async function selectionSort(arr) {
+        for (let i = 0; i < arr.length; i++) {
+            let smallestNum = 3434;
+            let smallestNumIndex = i;
+            let currentSmallNum, numToCompare;
+    
+            for (let x = 0+i; x < arr.length; x++) {   
+                currentSmallNum = document.getElementById("visIndex" + smallestNumIndex);
+                numToCompare = document.getElementById("visIndex" + x);
+                currentSmallNum.style.backgroundColor = "red";
+                numToCompare.style.backgroundColor = "red";
+                if (smallestNum > arr[x]) {
+                    smallestNum = arr[x];
+                    smallestNumIndex = x;
                 }
-                smallestNum = arrayToSort[1][x];
-                smallestNumIndex = x;
-                const newSmallestNumber = document.getElementsByClassName("index" + x);
-                newSmallestNumber[0].style.backgroundColor = "red";
-                newSmallestNumber[1].style.backgroundColor = "red";
-            }
-
-            if (arrayToSort[1][x] !== Infinity){
                 await sleep();
+                currentSmallNum.style.backgroundColor = "rgb(196, 196, 196)";
+                numToCompare.style.backgroundColor = "rgb(196, 196, 196)";
             }
+            var tempItem = arr[smallestNumIndex];
+            arr[smallestNumIndex] = arr[i];
+            arr[i] = tempItem;
+
+            currentSmallNum = document.getElementById("visIndex" + smallestNumIndex);
+            currentSmallNum.style.height = arr[smallestNumIndex] + "%";
+
+            numToCompare = document.getElementById("visIndex" + i);
+            numToCompare.style.backgroundColor = "green";
+            numToCompare.style.height = arr[i] + "%";
         }
-        arrayToSort[1][smallestNumIndex] = Infinity;
-        arrayToSort[0].push(smallestNum);
+    };
 
-        console.log(arrayToSort);
-
-        const arrayOfItems = document.getElementsByClassName("arrayItem");
-        for (let a = 0; a < arrayToSort[1].length; a++){
-            if (arrayToSort[1][a] !== Infinity){
-                arrayOfItems[a].style.backgroundColor = "rgb(196, 196, 196)";
-                arrayOfItems[a+arrayToSort[1].length].style.backgroundColor = "rgb(196, 196, 196)";
-            }
-        }
-        const arrayItem = document.getElementsByClassName("index" + smallestNumIndex);
-        arrayItem[0].style.backgroundColor = "green";
-        arrayItem[0].style.gridRow = "3";
-        arrayItem[0].style.gridColumn = i+1;
-
-        arrayItem[1].style.backgroundColor = "green";
-        arrayItem[1].style.gridRow = "1";
-        arrayItem[1].style.gridColumn = i+1;
-    }
-}
+    return { selectionSort };
+})();
 
 const insertionSort = (() => {
-    async function update (arr, num1Index, num2Index, i) {
+    async function update (arr, num1Index, num2Index) {
         let colour = "blue";
         let num1ToSwap = document.getElementById("visIndex" + num1Index);
         let num2ToSwap = document.getElementById("visIndex" + num2Index);
@@ -150,10 +134,10 @@ const insertionSort = (() => {
         num1ToSwap.style.backgroundColor = colour;
     };
 
-    async function insertionSort(arr, len) {
+    async function insertionSort(arr) {
         let i, j, key;
     
-        for (i = 1; i < len; i++) {
+        for (i = 1; i < arr.length; i++) {
             let startingPoint = document.getElementById("visIndex" + i);
             startingPoint.style.backgroundColor = "rgb(80, 221, 61)";
 
@@ -164,13 +148,13 @@ const insertionSort = (() => {
                 arr[j+1] = arr[j]; 
                 arr[j] = tempItem;
                 j = j - 1; 
-                await update(arr, j+1, j+2, i);
+                await update(arr, j+1, j+2);
             } 
             arr[j + 1] = key; 
             let sortedNum = document.getElementById("visIndex" + (j+1));
             sortedNum.style.backgroundColor = "blue";
         }
-        for (i = 0; i < len; i++) {
+        for (i = 0; i < arr.length; i++) {
             let completedItem = document.getElementById("visIndex" + i);
             completedItem.style.backgroundColor = "green";
             await sleep();
@@ -198,11 +182,11 @@ const bubbleSort = (() => {
 
     }
 
-    async function bubbleSort(arr, len) {
+    async function bubbleSort(arr) {
         let i, j;
         
-        for (i=0; i < len-1; i++) {
-            for (j=0; j < len-i-1; j++){
+        for (i=0; i < arr.length-1; i++) {
+            for (j=0; j < arr.length-i-1; j++){
                 if (arr[j] > arr[j+1]) {
                     await swap(arr, arr[j], arr[j+1], j);
                 }
@@ -219,9 +203,19 @@ const bubbleSort = (() => {
 })();
 
 const mergeSort = (() => {
+    async function update(arr, k) {
+        let indexToUpdate = document.getElementById("visIndex" + k);
+        indexToUpdate.style.height = arr[k] + "%";
+        await sleep();
+    }
 
     // Split array - check 
     async function merge(arr, l, m, r) {
+        let oldArr = new Array(arr.length);
+        for (let i=0; i < arr.length; i++) {
+            oldArr[i] = arr[i];
+        }
+
         // Variables to determine length of left and right array
         var l1 = m - l + 1;
         var l2 = r - m;
@@ -252,17 +246,20 @@ const mergeSort = (() => {
                 arr[k] = rArray[j];
                 j++
             }
+            await update(arr, k);
             k++
         }
 
         while (i < l1) {
             arr[k] = lArray[i];
             i++ 
+            await update(arr, k);
             k++
         }
         while (j < l2) {
             arr[k] = rArray[j];
             j++ 
+            await update(arr, k);
             k++
         }
     }
@@ -273,23 +270,34 @@ const mergeSort = (() => {
         }
 
         var m = l + parseInt((r-l)/2);
-        mergeSort(arr,l,m);
-        mergeSort(arr,m+1,r);
-        merge(arr,l,m,r);
+        await mergeSort(arr,l,m);
+        await mergeSort(arr,m+1,r);
+        await merge(arr,l,m,r);
     }
 
     const begin = () => {
 
     }
 
-    return { merge, mergeSort, begin };
+    return { update, merge, mergeSort, begin };
 })();
 
 const quickSort = (() => {
-    function swap (arr, i, j) {
+    async function update (arr, i, j) {
+        let indexToUpdate1 = document.getElementById("visIndex" + i);
+        let indexToUpdate2 = document.getElementById("visIndex" + j);
+
+        indexToUpdate1.style.height = arr[i] + "%";
+        indexToUpdate2.style.height = arr[j] + "%";
+
+        await sleep();
+    }
+
+    async function swap (arr, i, j) {
         let temp = arr[i];
         arr[i] = arr[j];
         arr[j] = temp;
+        await update(arr, i, j);
     }
 
     function partition (arr, low, high) {
@@ -312,14 +320,15 @@ const quickSort = (() => {
             quickSort(arr, low, pi - 1);
             quickSort(arr, pi + 1, high);
         }
+        console.log(arr);
     }
 
     return { swap, partition, quickSort }
 })();
 
 setup.presentArray(arrayToSort[1]);
-selectionSortFunc();
-// insertionSort.insertionSort(arrayToSort[1], arrayLength);
-// bubbleSort.bubbleSort(arrayToSort[1], arrayLength);
+// selectionSort.selectionSort(arrayToSort[1]);
+// insertionSort.insertionSort(arrayToSort[1]);
+// bubbleSort.bubbleSort(arrayToSort[1]);
 // mergeSort.mergeSort(arrayToSort[1], 0, arrayToSort[1].length - 1);
-// quickSort.quickSort(arrayToSort[1], 0, arrayToSort[1].length - 1);
+quickSort.quickSort(arrayToSort[1], 0, arrayToSort[1].length - 1);
