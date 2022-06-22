@@ -1,4 +1,4 @@
-let arrayLength = 50;
+let arrayLength = 100;
 
 // First Nested is the sorted subarray, Second Nested is unsorted subarray
 let arrayToSort = [[],[]];
@@ -12,8 +12,10 @@ visualArrayContainer.style.gridTemplateColumns = "auto";
 const arrayContainer = document.getElementById("arrayContainer");
 arrayContainer.style.gridTemplateColumns = "repeat(" + arrayLength + ", 1fr)";
 
-function sleep (ms) {
-    return new Promise((resolve) => setTimeout(resolve, ms));
+let sleepTime = 10;
+
+function sleep () {
+    return new Promise((resolve) => setTimeout(resolve, sleepTime));
 }
 
 const setup = (() => {
@@ -25,15 +27,15 @@ const setup = (() => {
         arrayContainer.innerHTML = "";
         visualArrayContainer.innerHTML = "";
         for (let i = 0; i < arr.length; i++) {
-            // Show List of numbers in array
-            const arrayItem = document.createElement("div");
-            arrayItem.classList.add("arrayItem");
-            arrayItem.classList.add("number"+arr[i]);
-            arrayItem.classList.add("index"+i);
-            arrayItem.innerText = arr[i];
-            arrayItem.style.gridRow = "1";
-            arrayItem.style.gridColumn = i+1;
-            arrayContainer.appendChild(arrayItem);
+            // // Show List of numbers in array
+            // const arrayItem = document.createElement("div");
+            // arrayItem.classList.add("arrayItem");
+            // arrayItem.classList.add("number"+arr[i]);
+            // arrayItem.classList.add("index"+i);
+            // arrayItem.innerText = arr[i];
+            // arrayItem.style.gridRow = "1";
+            // arrayItem.style.gridColumn = i+1;
+            // arrayContainer.appendChild(arrayItem);
 
 
             // Create visualisation for array
@@ -105,7 +107,7 @@ async function selectionSortFunc() {
             }
 
             if (arrayToSort[1][x] !== Infinity){
-                await sleep(1);
+                await sleep();
             }
         }
         arrayToSort[1][smallestNumIndex] = Infinity;
@@ -131,20 +133,53 @@ async function selectionSortFunc() {
     }
 }
 
-async function insertionSort(arr, len) {
-    let i, j, key;
+const insertionSort = (() => {
+    async function update (arr, num1Index, num2Index, i) {
+        let colour = "blue";
+        let num1ToSwap = document.getElementById("visIndex" + num1Index);
+        let num2ToSwap = document.getElementById("visIndex" + num2Index);
 
-    for (i = 1; i < len; i++) {
-        key = arr[i];
-        j = i - 1;
+        if (num1ToSwap.style.backgroundColor !== "blue") {
+            colour = "rgb(196, 196, 196)"
+        }
 
-        while (j >= 0 && arr[j] > key) {
-            arr[j + 1] = arr[j]; 
-            j = j - 1; 
-        } 
-        arr[j + 1] = key; 
-    }
-}
+        num1ToSwap.style.height = arr[num1Index] + "%";
+        num1ToSwap.style.backgroundColor = "red";
+        num2ToSwap.style.height = arr[num2Index] + "%";
+        await sleep();
+        num1ToSwap.style.backgroundColor = colour;
+    };
+
+    async function insertionSort(arr, len) {
+        let i, j, key;
+    
+        for (i = 1; i < len; i++) {
+            let startingPoint = document.getElementById("visIndex" + i);
+            startingPoint.style.backgroundColor = "rgb(80, 221, 61)";
+
+            key = arr[i];
+            j = i - 1;
+            while (j >= 0 && arr[j] > key) {
+                let tempItem = arr[j + 1];
+                arr[j+1] = arr[j]; 
+                arr[j] = tempItem;
+                j = j - 1; 
+                await update(arr, j+1, j+2, i);
+            } 
+            arr[j + 1] = key; 
+            let sortedNum = document.getElementById("visIndex" + (j+1));
+            sortedNum.style.backgroundColor = "blue";
+        }
+        for (i = 0; i < len; i++) {
+            let completedItem = document.getElementById("visIndex" + i);
+            completedItem.style.backgroundColor = "green";
+            await sleep();
+        }
+    };
+
+    return { update, insertionSort };
+})();
+
 
 const bubbleSort = (() => {
     function swap (arr, num1, num2, index) {
@@ -171,7 +206,7 @@ const bubbleSort = (() => {
                 if (arr[j] > arr[j+1]) {
                     await swap(arr, arr[j], arr[j+1], j);
                 }
-                await sleep(1);
+                await sleep();
             }
             const visSortedNum = document.getElementById("visIndex" + j);
             visSortedNum.style.backgroundColor = "green";
@@ -283,8 +318,8 @@ const quickSort = (() => {
 })();
 
 setup.presentArray(arrayToSort[1]);
-// selectionSortFunc();
-// insertionSort(arrayToSort[1], arrayLength);
-bubbleSort.bubbleSort(arrayToSort[1], arrayLength);
+selectionSortFunc();
+// insertionSort.insertionSort(arrayToSort[1], arrayLength);
+// bubbleSort.bubbleSort(arrayToSort[1], arrayLength);
 // mergeSort.mergeSort(arrayToSort[1], 0, arrayToSort[1].length - 1);
 // quickSort.quickSort(arrayToSort[1], 0, arrayToSort[1].length - 1);

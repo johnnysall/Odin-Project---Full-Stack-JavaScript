@@ -59,7 +59,7 @@ table {
 :root {
     --backColour: rgb(252, 252, 252);
     --alternateColour: rgb(196, 196, 196);
-    --highlightColour: rgb(58, 212, 38);
+    --highlightColour: rgb(80, 221, 61);
     --fontFam: 'Dosis', sans-serif;
     --fontCol: rgb(231, 231, 231);
     --p1Col: rgb(82, 85, 255);
@@ -127,6 +127,6 @@ body {
     position: absolute;
     left: 0;
     bottom: 0;
-    /* transition: 0.2s all ease; */
+    /* transition: 0.2s all linear; */
 }
 
