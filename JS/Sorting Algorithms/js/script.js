@@ -1,4 +1,4 @@
-let arrayLength = 300;
+let arrayLength = 100;
 
 // First Nested is the sorted subarray, Second Nested is unsorted subarray
 let arrayToSort = [[],[]];
@@ -12,7 +12,7 @@ visualArrayContainer.style.gridTemplateColumns = "auto";
 const arrayContainer = document.getElementById("arrayContainer");
 arrayContainer.style.gridTemplateColumns = "repeat(" + arrayLength + ", 1fr)";
 
-let sleepTime = 3;
+let sleepTime = 100;
 
 function sleep () {
     return new Promise((resolve) => setTimeout(resolve, sleepTime));
@@ -164,7 +164,6 @@ const insertionSort = (() => {
     return { update, insertionSort };
 })();
 
-
 const bubbleSort = (() => {
     function swap (arr, num1, num2, index) {
         arr[index] = num2;
@@ -288,9 +287,14 @@ const quickSort = (() => {
         let indexToUpdate2 = document.getElementById("visIndex" + j);
 
         indexToUpdate1.style.height = arr[i] + "%";
+        indexToUpdate1.style.backgroundColor = "red";
         indexToUpdate2.style.height = arr[j] + "%";
+        indexToUpdate2.style.backgroundColor = "red";
 
         await sleep();
+
+        indexToUpdate1.style.backgroundColor = "rgb(196, 196, 196)";
+        indexToUpdate2.style.backgroundColor = "rgb(196, 196, 196)";
     }
 
     async function swap (arr, i, j) {
@@ -300,27 +304,28 @@ const quickSort = (() => {
         await update(arr, i, j);
     }
 
-    function partition (arr, low, high) {
+    async function partition (arr, low, high) {
         let pivot = arr[high];
         let i = (low - 1);
 
         for (let j = low; j <= high-1; j++) {
             if (arr[j] < pivot) {
                 i++
-                swap(arr, i, j);
+                await swap(arr, i, j);
             }
         }
-        swap(arr, i+1, high);
+        await swap(arr, i+1, high);
         return(i+1);
     }
 
-    function quickSort (arr, low, high) {
+    async function quickSort (arr, low, high) {
         if (low < high) {
-            let pi = partition(arr, low, high);
-            quickSort(arr, low, pi - 1);
-            quickSort(arr, pi + 1, high);
+            let piItem = document.getElementById("visIndex" + high);
+            piItem.style.backgroundColor = "green";
+            let pi = await partition(arr, low, high);
+            await quickSort(arr, low, pi - 1);
+            await quickSort(arr, pi + 1, high);
         }
-        console.log(arr);
     }
 
     return { swap, partition, quickSort }
