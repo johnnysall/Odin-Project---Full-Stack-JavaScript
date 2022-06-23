@@ -58,6 +58,7 @@ table {
 
 :root {
     --backColour: rgb(252, 252, 252);
+    --secondColour: rgb(61, 61, 61);
     --alternateColour: rgb(196, 196, 196);
     --highlightColour: rgb(80, 221, 61);
     --fontFam: 'Dosis', sans-serif;
@@ -76,6 +77,76 @@ body {
     width: 100vw;
     height: 100vh;
     overflow-y: hidden;
+}
+
+#title {
+    background-color: var(--secondColour);
+    width: 100%;
+    height: 35px;
+    font-family: var(--fontFam);
+    font-size: 20px;
+    color: var(--fontCol);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#menu {
+    background-color: var(--secondColour);
+    width: 100%;
+    height: 45px;
+
+    box-sizing: border-box;
+}
+
+#menu > div {
+    height: 100%;
+    width: calc(100%/8);
+    float: left;
+    font-family: var(--fontFam);
+    color: var(--fontCol);
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    box-sizing: border-box;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#menu > .btn:hover {
+    cursor: pointer;
+    border-left: solid thin rgb(47, 255, 47);
+    border-top: solid thin rgb(47, 255, 47);
+    border-right: solid thin rgb(47, 255, 47);
+    box-shadow: inset 0 0 4px 1px rgb(47, 255, 47);
+    box-sizing: border-box;
+    color: rgb(47, 255, 47);
+}
+
+#menu > .active {
+    color: rgb(47, 255, 47);
+}
+
+#menu > .notActive {
+    color: rgb(255, 47, 47);
+}
+
+#menu > .disabled:hover {
+    cursor: default;
+    border: none;
+    box-shadow: none;
+    box-sizing: border-box;
+    color: rgb(255, 47, 47);
+}
+
+#menu > .disabled.active:hover {
+    cursor: default;
+    border: none;
+    box-shadow: inset 0 0 4px 1px var(--secondColour);
+    box-sizing: border-box;
+    color: rgb(47, 255, 47);
 }
 
 #arrayContainer {
@@ -107,6 +178,28 @@ body {
     display: grid;
     grid-template-rows: 2fr 1fr 2fr;
 } */
+
+#stats {
+    width: 60%;
+    height: 45px;
+    background-color: var(--secondColour);
+    margin: 0 auto;
+    border-bottom-left-radius: 90px;
+    border-bottom-right-radius: 90px;
+    padding: 0 5%;
+
+    display: grid;
+    grid-template: 1fr/ repeat(4, 1fr);
+}
+
+#stats > div {
+    font-family: var(--fontFam);
+    color: var(--fontCol);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 
 #visualArrayContainer {
     width: 80%;

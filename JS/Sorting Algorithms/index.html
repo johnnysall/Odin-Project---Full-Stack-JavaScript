@@ -8,17 +8,36 @@
     <title>Sorting Algorithms</title>
 </head>
 <body>
-    <div id="arrayContainer" class="arrayContainer">
-        <!-- <div id="unsortedArray">
-            
+    <div id="title">Sorting Algorithms</div>
+    <div id="menu">
+        <div id="resetArrBtn" class="btn">Reset Array</div>
+        <div id="speedSortScale" class="scale">
+            <p>Speed:</p>
+            <input oninput="speedSliderUpdate()" type="range" min="3" max="1000" value="20" class="slider" id="speedRange">
         </div>
-        <div id="sortedArray">
-            
-        </div> -->
+        <div id="arraySizeScale" class="scale">
+            <p>Array Size:</p>
+            <input oninput="arraySizeSliderUpdate()" type="range" min="1" max="500" value="200" class="slider" id="sizeRange">
+        </div>
+
+        <div id="selectionSortBtn" class="btn sort">Selection Sort</div>
+        <div id="insertionSortBtn" class="btn sort">Insertion Sort</div>
+        <div id="bubbleSortBtn" class="btn sort">Bubble Sort</div>
+        <div id="mergeSortBtn" class="btn sort">Merge Sort</div>
+        <div id="quickSortBtn" class="btn sort">Quick Sort</div>
     </div>
+
+    <div id="stats">
+        <div id="speedMsContainer"></div>
+        <div id="arraySizeContainer"></div>
+        <div id="comparisonsContainer"></div>
+        <div id="completedContainer"></div>
+    </div>
+
     <div id="visualArrayContainer">
-        
+    
     </div>
+
 
     <script type="text/javascript" src="js/script.js"></script>
 </body>

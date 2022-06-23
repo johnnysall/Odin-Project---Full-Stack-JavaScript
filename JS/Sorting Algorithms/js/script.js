@@ -1,43 +1,177 @@
-let arrayLength = 100;
-
-// First Nested is the sorted subarray, Second Nested is unsorted subarray
-let arrayToSort = [[],[]];
-
-for (let i = 0; i < arrayLength; i++) {
-    arrayToSort[1].push(Math.round((Math.random() * 99) + 1));
-}
+let arrayLength = 200;
+let arrayToSort = [];
+let running = false;
 
 const visualArrayContainer = document.getElementById("visualArrayContainer");
 visualArrayContainer.style.gridTemplateColumns = "auto";
-const arrayContainer = document.getElementById("arrayContainer");
-arrayContainer.style.gridTemplateColumns = "repeat(" + arrayLength + ", 1fr)";
 
-let sleepTime = 100;
+const resetArrBtn = document.getElementById("resetArrBtn");
+resetArrBtn.addEventListener("click", function() {
+    if (running !== true) {
+        setup.resetArray();
+    }
+});
 
+const navBarList = [resetArrBtn];
+
+const selectionSortBtn = document.getElementById("selectionSortBtn");
+navBarList.push(selectionSortBtn);
+if (selectionSortBtn) {
+    selectionSortBtn.addEventListener("click", async function() {
+        if (running !== true) {
+            running = true;
+            setup.disableNavBarElements("selectionSortBtn"); 
+            await selectionSort.selectionSort(arrayToSort);
+            setup.enableNavBarElements("selectionSortBtn"); 
+            running = false;
+        }
+    });
+}
+
+const insertionSortBtn = document.getElementById("insertionSortBtn");
+navBarList.push(insertionSortBtn);
+if (insertionSortBtn) {
+    insertionSortBtn.addEventListener("click", async function() {
+        if (running !== true) {
+            running = true;
+            setup.disableNavBarElements("insertionSortBtn"); 
+            await insertionSort.insertionSort(arrayToSort);
+            setup.enableNavBarElements("insertionSortBtn"); 
+            running = false;
+        }
+    });
+}
+
+const bubbleSortBtn = document.getElementById("bubbleSortBtn");
+navBarList.push(bubbleSortBtn);
+if (bubbleSortBtn) {
+    bubbleSortBtn.addEventListener("click", async function() {
+        if (running !== true) {
+            running = true;
+            setup.disableNavBarElements("bubbleSortBtn"); 
+            await bubbleSort.bubbleSort(arrayToSort);
+            setup.enableNavBarElements("bubbleSortBtn"); 
+            running = false;
+        }
+    });
+}
+
+const mergeSortBtn = document.getElementById("mergeSortBtn");
+navBarList.push(mergeSortBtn);
+if (mergeSortBtn) {
+    mergeSortBtn.addEventListener("click", async function() {
+        if (running !== true) {
+            running = true;
+            setup.disableNavBarElements("mergeSortBtn"); 
+            await mergeSort.mergeSort(arrayToSort, 0, arrayToSort.length - 1);
+            setup.enableNavBarElements("mergeSortBtn"); 
+            running = false;
+        }
+    });
+}
+
+const quickSortBtn = document.getElementById("quickSortBtn");
+navBarList.push(quickSortBtn);
+if (quickSortBtn) {
+    quickSortBtn.addEventListener("click", async function() {
+        if (running !== true) {
+            running = true;
+            setup.disableNavBarElements("quickSortBtn"); 
+            await quickSort.quickSort(arrayToSort, 0, arrayToSort.length - 1);
+            setup.enableNavBarElements("quickSortBtn"); 
+            running = false;
+        }
+    });
+}
+
+let sleepTime = 20;
+let comparisons = 0;
+let completed = 0;
 function sleep () {
     return new Promise((resolve) => setTimeout(resolve, sleepTime));
 }
 
+const speedMsContainer = document.getElementById("speedMsContainer");
+speedMsContainer.innerText = "Array Speed (ms): " + sleepTime;
+
+const arraySizeContainer = document.getElementById("arraySizeContainer");
+arraySizeContainer.innerText = "Array Size: " + arrayLength;
+
+const comparisonsContainer = document.getElementById("comparisonsContainer");
+comparisonsContainer.innerText = "Comparisons: " + comparisons;
+
+const completedContainer = document.getElementById("completedContainer");
+completedContainer.innerText = "Completed: " + completed;
+
+const speedRange = document.getElementById("speedRange");
+const sizeRange = document.getElementById("sizeRange");
+
+function speedSliderUpdate() {
+    sleepTime = speedRange.value;
+    speedMsContainer.innerText = "Array Speed (ms): " + sleepTime;
+}
+
+function arraySizeSliderUpdate() {
+    if (running !== true) {
+        arrayLength = sizeRange.value;
+        arraySizeContainer.innerText = "Array Size: " + arrayLength;
+        setup.resetArray(arrayToSort);
+    }
+}
+
 const setup = (() => {
-    const clearArray = () => {
-        arrayContainer.innerHTML = "";
+    const resetArray = () => {
+        running = false;
+        arrayToSort = [];
+        comparisons = 0;
+        completed = 0;
+        comparisonsContainer.innerText = "Comparisons: " + comparisons;
+        completedContainer.innerText = "Completed: " + completed;
+        
+        for (let i = 0; i < arrayLength; i++) {
+            arrayToSort.push(Math.round((Math.random() * 99) + 1));
+        }
+        presentArray(arrayToSort);
+    }
+
+    const updateComparisons = () => {
+        comparisons = comparisons + 1;
+        comparisonsContainer.innerText = "Comparisons: " + comparisons;
+    }
+
+    const updateCompleted = () => {
+        completed = completed + 1;
+        completedContainer.innerText = "Completed: " + completed;
+    }
+
+    const disableNavBarElements = (id) => {
+        sizeRange.disabled = true;
+        for (let i = 0; i < navBarList.length; i++) {
+            navBarList[i].classList.add("disabled");
+            if (navBarList[i].id !== id) {
+                navBarList[i].classList.add("notActive");
+            } else {
+                navBarList[i].classList.add("active");
+            }
+        }
+    }
+
+    const enableNavBarElements = (id) => {
+        sizeRange.disabled = false;
+        for (let i = 0; i < navBarList.length; i++) {
+            navBarList[i].classList.remove("disabled");
+            if (navBarList[i].id !== id) {
+                navBarList[i].classList.remove("notActive");
+            } else {
+                navBarList[i].classList.remove("active");
+            }
+        }
     }
 
     const presentArray = (arr) => {
-        arrayContainer.innerHTML = "";
+        // arrayContainer.innerHTML = "";
         visualArrayContainer.innerHTML = "";
         for (let i = 0; i < arr.length; i++) {
-            // // Show List of numbers in array
-            // const arrayItem = document.createElement("div");
-            // arrayItem.classList.add("arrayItem");
-            // arrayItem.classList.add("number"+arr[i]);
-            // arrayItem.classList.add("index"+i);
-            // arrayItem.innerText = arr[i];
-            // arrayItem.style.gridRow = "1";
-            // arrayItem.style.gridColumn = i+1;
-            // arrayContainer.appendChild(arrayItem);
-
-
             // Create visualisation for array
             const visArrayItem = document.createElement("div");
             visArrayItem.classList.add("visArrayItem");
@@ -48,41 +182,15 @@ const setup = (() => {
             visArrayItem.style.height = arr[i] + "%";
             visArrayItem.style.width = (100/(arrayLength)) + "%";
             visArrayItem.style.left = (i * (100/(arrayLength))) + "%";
-            // visArrayItem.style.gridRow = "1";
-            // visArrayItem.style.gridColumn = i+1;
-            // visArrayItem.style.marginBottom = (100 - arrayToSort[i]) + "%";
             visualArrayContainer.appendChild(visArrayItem);
         }
     }
 
-    const moveItem = (index, direction) => {
-        const arrayItem = document.getElementsByClassName("index" + index);
-        // arrayItem[0].classList.add(direction);
-        if (direction === "up"){
-            arrayItem[0].classList.remove("down");
-            arrayItem[0].classList.add("up");
-        }if (direction === "right"){
-            arrayItem[0].classList.remove("left");
-            arrayItem[0].classList.add("right");
-        }if (direction === "down"){
-            // arrayItem[0].style.marginTop = "70px";
-            arrayItem[0].classList.remove("up");
-            arrayItem[0].classList.add("down");
-        }if (direction === "left") {
-            arrayItem[0].classList.remove("right");
-            arrayItem[0].classList.add("left");
-        }
-
-        arrayItem[0].addEventListener("animationend", () => {
-            return;
-        })
-    }
-
-    return { clearArray, presentArray, moveItem };
+    return { resetArray, updateComparisons, updateCompleted, disableNavBarElements, enableNavBarElements, presentArray };
 })();
 
 const selectionSort = (() => {
-    async function selectionSort(arr) {
+    async function selectionSort(arr) {  
         for (let i = 0; i < arr.length; i++) {
             let smallestNum = 3434;
             let smallestNumIndex = i;
@@ -97,9 +205,10 @@ const selectionSort = (() => {
                     smallestNum = arr[x];
                     smallestNumIndex = x;
                 }
+                setup.updateComparisons();
                 await sleep();
-                currentSmallNum.style.backgroundColor = "rgb(196, 196, 196)";
-                numToCompare.style.backgroundColor = "rgb(196, 196, 196)";
+                currentSmallNum.style.backgroundColor = "yellow";
+                numToCompare.style.backgroundColor = "yellow";
             }
             var tempItem = arr[smallestNumIndex];
             arr[smallestNumIndex] = arr[i];
@@ -111,6 +220,12 @@ const selectionSort = (() => {
             numToCompare = document.getElementById("visIndex" + i);
             numToCompare.style.backgroundColor = "green";
             numToCompare.style.height = arr[i] + "%";
+            setup.updateCompleted();
+
+            for (let y=0; y < arr.length-i-1; y++) {
+                let item = document.getElementById("visIndex" + (y+i+1));
+                item.style.backgroundColor = "rgb(196, 196, 196)";
+            }
         }
     };
 
@@ -119,19 +234,14 @@ const selectionSort = (() => {
 
 const insertionSort = (() => {
     async function update (arr, num1Index, num2Index) {
-        let colour = "blue";
         let num1ToSwap = document.getElementById("visIndex" + num1Index);
         let num2ToSwap = document.getElementById("visIndex" + num2Index);
-
-        if (num1ToSwap.style.backgroundColor !== "blue") {
-            colour = "rgb(196, 196, 196)"
-        }
 
         num1ToSwap.style.height = arr[num1Index] + "%";
         num1ToSwap.style.backgroundColor = "red";
         num2ToSwap.style.height = arr[num2Index] + "%";
+        setup.updateComparisons();
         await sleep();
-        num1ToSwap.style.backgroundColor = colour;
     };
 
     async function insertionSort(arr) {
@@ -139,7 +249,7 @@ const insertionSort = (() => {
     
         for (i = 1; i < arr.length; i++) {
             let startingPoint = document.getElementById("visIndex" + i);
-            startingPoint.style.backgroundColor = "rgb(80, 221, 61)";
+            startingPoint.style.backgroundColor = "blue";
 
             key = arr[i];
             j = i - 1;
@@ -149,14 +259,16 @@ const insertionSort = (() => {
                 arr[j] = tempItem;
                 j = j - 1; 
                 await update(arr, j+1, j+2);
+
+                let num1 = document.getElementById("visIndex" + (j+1));
+                num1.style.backgroundColor = "yellow";
             } 
             arr[j + 1] = key; 
-            let sortedNum = document.getElementById("visIndex" + (j+1));
-            sortedNum.style.backgroundColor = "blue";
         }
         for (i = 0; i < arr.length; i++) {
             let completedItem = document.getElementById("visIndex" + i);
             completedItem.style.backgroundColor = "green";
+            setup.updateCompleted();
             await sleep();
         }
     };
@@ -174,11 +286,8 @@ const bubbleSort = (() => {
 
         num1ToSwap.style.left = ((index+1) * (100/(arrayLength))) + "%";
         num1ToSwap.id = "visIndex" + (index + 1);
-        num1ToSwap.style.backgroundColor = "red";
         num2ToSwap.style.left = (index * (100/(arrayLength))) + "%";
         num2ToSwap.id = "visIndex" + index;
-        num2ToSwap.style.backgroundColor = "yellow";
-
     }
 
     async function bubbleSort(arr) {
@@ -186,30 +295,63 @@ const bubbleSort = (() => {
         
         for (i=0; i < arr.length-1; i++) {
             for (j=0; j < arr.length-i-1; j++){
-                if (arr[j] > arr[j+1]) {
+                if (arr[j] >= arr[j+1]) {
                     await swap(arr, arr[j], arr[j+1], j);
                 }
+                let numToSwap = document.getElementById("visIndex" + j);
+                numToSwap.style.backgroundColor = "yellow";
+                let numToSwap2 = document.getElementById("visIndex" + (j+1));
+                numToSwap2.style.backgroundColor = "red";
+                setup.updateComparisons();
                 await sleep();
             }
+            for (let y=0; y < arr.length-i-1; y++) {
+                let item = document.getElementById("visIndex" + (y));
+                item.style.backgroundColor = "rgb(196, 196, 196)";
+            }
+
             const visSortedNum = document.getElementById("visIndex" + j);
             visSortedNum.style.backgroundColor = "green";
+            setup.updateCompleted();
         }
         const visSortedNum = document.getElementById("visIndex0");
         visSortedNum.style.backgroundColor = "green";
+        setup.updateCompleted();
     }
 
     return { swap, bubbleSort };
 })();
 
 const mergeSort = (() => {
-    async function update(arr, k) {
+    async function update(arr, k, lastMerge) {
         let indexToUpdate = document.getElementById("visIndex" + k);
         indexToUpdate.style.height = arr[k] + "%";
+        setup.updateComparisons();
+
+        if (lastMerge === true) {
+            setup.updateCompleted();
+            indexToUpdate.style.backgroundColor = "green";
+        }
         await sleep();
     }
 
     // Split array - check 
     async function merge(arr, l, m, r) {
+        let lastMerge;
+        for (let i=0; i < r-l; i++) {
+            let item = document.getElementById("visIndex" + (i+l));
+            item.style.backgroundColor = "yellow";
+        }
+        let lSide = document.getElementById("visIndex" + l);
+        lSide.style.backgroundColor = "red";
+        let rSide = document.getElementById("visIndex" + r);
+        rSide.style.backgroundColor = "red";
+
+        if (l == 0) {
+            if (r == arr.length-1) {
+                lastMerge = true;
+            }
+        }
         let oldArr = new Array(arr.length);
         for (let i=0; i < arr.length; i++) {
             oldArr[i] = arr[i];
@@ -245,21 +387,26 @@ const mergeSort = (() => {
                 arr[k] = rArray[j];
                 j++
             }
-            await update(arr, k);
+            await update(arr, k, lastMerge);
             k++
         }
 
         while (i < l1) {
             arr[k] = lArray[i];
             i++ 
-            await update(arr, k);
+            await update(arr, k, lastMerge);
             k++
         }
         while (j < l2) {
             arr[k] = rArray[j];
             j++ 
-            await update(arr, k);
+            await update(arr, k, lastMerge);
             k++
+        }
+
+        if (lastMerge !== true) {
+            lSide.style.backgroundColor = "yellow";
+            rSide.style.backgroundColor = "yellow";
         }
     }
 
@@ -291,6 +438,7 @@ const quickSort = (() => {
         indexToUpdate2.style.height = arr[j] + "%";
         indexToUpdate2.style.backgroundColor = "red";
 
+        setup.updateComparisons();
         await sleep();
 
         indexToUpdate1.style.backgroundColor = "rgb(196, 196, 196)";
@@ -331,9 +479,4 @@ const quickSort = (() => {
     return { swap, partition, quickSort }
 })();
 
-setup.presentArray(arrayToSort[1]);
-// selectionSort.selectionSort(arrayToSort[1]);
-// insertionSort.insertionSort(arrayToSort[1]);
-// bubbleSort.bubbleSort(arrayToSort[1]);
-// mergeSort.mergeSort(arrayToSort[1], 0, arrayToSort[1].length - 1);
-quickSort.quickSort(arrayToSort[1], 0, arrayToSort[1].length - 1);
+setup.resetArray(arrayToSort);
