@@ -12,19 +12,40 @@
     <div id="menu">
         <div id="resetArrBtn" class="btn">Reset Array</div>
         <div id="speedSortScale" class="scale">
-            <p>Speed:</p>
-            <input oninput="speedSliderUpdate()" type="range" min="3" max="1000" value="20" class="slider" id="speedRange">
+            <div class="scaleTitle">
+                Speed:
+            </div>
+            <div class="sliderContainer">
+                <input oninput="speedSliderUpdate()" type="range" min="3" max="1000" value="20" class="slider" id="speedRange">
+            </div>
         </div>
         <div id="arraySizeScale" class="scale">
-            <p>Array Size:</p>
-            <input oninput="arraySizeSliderUpdate()" type="range" min="1" max="500" value="200" class="slider" id="sizeRange">
+            <div class="scaleTitle">
+                Array Size:
+            </div>
+            <div class="sliderContainer">
+                <input oninput="arraySizeSliderUpdate()" type="range" min="1" max="500" value="200" class="slider" id="sizeRange">
+            </div>
         </div>
 
-        <div id="selectionSortBtn" class="btn sort">Selection Sort</div>
-        <div id="insertionSortBtn" class="btn sort">Insertion Sort</div>
-        <div id="bubbleSortBtn" class="btn sort">Bubble Sort</div>
-        <div id="mergeSortBtn" class="btn sort">Merge Sort</div>
-        <div id="quickSortBtn" class="btn sort">Quick Sort</div>
+        <div id="uncollapsedAlgorithms">
+            <div id="selectionSortBtn" class="selectionSortBtn btn sort">Selection Sort</div>
+            <div id="insertionSortBtn" class="insertionSortBtn btn sort">Insertion Sort</div>
+            <div id="bubbleSortBtn" class="bubbleSortBtn btn sort">Bubble Sort</div>
+            <div id="mergeSortBtn" class="mergeSortBtn btn sort">Merge Sort</div>
+            <div id="quickSortBtn" class="quickSortBtn btn sort">Quick Sort</div>
+        </div>
+
+        <div id="collapsedAlgorithms" class="dropdown btn">
+            Dropdown
+            <div class="dropdown-content">
+                <a id="selectionSortBtn" class="selectionSortBtn btn sort">Selection Sort</a>
+                <a id="insertionSortBtn" class="insertionSortBtn btn sort">Insertion Sort</a>
+                <a id="bubbleSortBtn" class="bubbleSortBtn btn sort">Bubble Sort</a>
+                <a id="mergeSortBtn" class="mergeSortBtn btn sort">Merge Sort</a>
+                <a id="quickSortBtn" class="quickSortBtn btn sort">Quick Sort</a>
+            </div>
+        </div>
     </div>
 
     <div id="stats">
@@ -37,7 +58,6 @@
     <div id="visualArrayContainer">
     
     </div>
-
 
     <script type="text/javascript" src="js/script.js"></script>
 </body>

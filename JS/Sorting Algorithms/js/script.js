@@ -14,12 +14,15 @@ resetArrBtn.addEventListener("click", function() {
 
 const navBarList = [resetArrBtn];
 
-const selectionSortBtn = document.getElementById("selectionSortBtn");
-navBarList.push(selectionSortBtn);
-if (selectionSortBtn) {
-    selectionSortBtn.addEventListener("click", async function() {
+const selectionSortBtn = document.getElementsByClassName("selectionSortBtn");
+navBarList.push(selectionSortBtn[0]);
+navBarList.push(selectionSortBtn[1]);
+
+if (selectionSortBtn[0]) {
+    selectionSortBtn[0].addEventListener("click", async function() {
         if (running !== true) {
             running = true;
+            setup.resetArray();
             setup.disableNavBarElements("selectionSortBtn"); 
             await selectionSort.selectionSort(arrayToSort);
             setup.enableNavBarElements("selectionSortBtn"); 
@@ -28,12 +31,15 @@ if (selectionSortBtn) {
     });
 }
 
-const insertionSortBtn = document.getElementById("insertionSortBtn");
-navBarList.push(insertionSortBtn);
-if (insertionSortBtn) {
-    insertionSortBtn.addEventListener("click", async function() {
+const insertionSortBtn = document.getElementsByClassName("insertionSortBtn");
+navBarList.push(insertionSortBtn[0]);
+navBarList.push(insertionSortBtn[1]);
+
+if (insertionSortBtn[0]) {
+    insertionSortBtn[0].addEventListener("click", async function() {
         if (running !== true) {
             running = true;
+            setup.resetArray();
             setup.disableNavBarElements("insertionSortBtn"); 
             await insertionSort.insertionSort(arrayToSort);
             setup.enableNavBarElements("insertionSortBtn"); 
@@ -42,12 +48,15 @@ if (insertionSortBtn) {
     });
 }
 
-const bubbleSortBtn = document.getElementById("bubbleSortBtn");
-navBarList.push(bubbleSortBtn);
-if (bubbleSortBtn) {
-    bubbleSortBtn.addEventListener("click", async function() {
+const bubbleSortBtn = document.getElementsByClassName("bubbleSortBtn");
+navBarList.push(bubbleSortBtn[0]);
+navBarList.push(bubbleSortBtn[1]);
+
+if (bubbleSortBtn[0]) {
+    bubbleSortBtn[0].addEventListener("click", async function() {
         if (running !== true) {
             running = true;
+            setup.resetArray();
             setup.disableNavBarElements("bubbleSortBtn"); 
             await bubbleSort.bubbleSort(arrayToSort);
             setup.enableNavBarElements("bubbleSortBtn"); 
@@ -56,12 +65,15 @@ if (bubbleSortBtn) {
     });
 }
 
-const mergeSortBtn = document.getElementById("mergeSortBtn");
-navBarList.push(mergeSortBtn);
-if (mergeSortBtn) {
-    mergeSortBtn.addEventListener("click", async function() {
+const mergeSortBtn = document.getElementsByClassName("mergeSortBtn");
+navBarList.push(mergeSortBtn[0]);
+navBarList.push(mergeSortBtn[1]);
+
+if (mergeSortBtn[0]) {
+    mergeSortBtn[0].addEventListener("click", async function() {
         if (running !== true) {
             running = true;
+            setup.resetArray();
             setup.disableNavBarElements("mergeSortBtn"); 
             await mergeSort.mergeSort(arrayToSort, 0, arrayToSort.length - 1);
             setup.enableNavBarElements("mergeSortBtn"); 
@@ -70,12 +82,15 @@ if (mergeSortBtn) {
     });
 }
 
-const quickSortBtn = document.getElementById("quickSortBtn");
-navBarList.push(quickSortBtn);
-if (quickSortBtn) {
-    quickSortBtn.addEventListener("click", async function() {
+const quickSortBtn = document.getElementsByClassName("quickSortBtn");
+navBarList.push(quickSortBtn[0]);
+navBarList.push(quickSortBtn[1]);
+
+if (quickSortBtn[0]) {
+    quickSortBtn[0].addEventListener("click", async function() {
         if (running !== true) {
             running = true;
+            setup.resetArray();
             setup.disableNavBarElements("quickSortBtn"); 
             await quickSort.quickSort(arrayToSort, 0, arrayToSort.length - 1);
             setup.enableNavBarElements("quickSortBtn"); 
@@ -146,12 +161,15 @@ const setup = (() => {
 
     const disableNavBarElements = (id) => {
         sizeRange.disabled = true;
-        for (let i = 0; i < navBarList.length; i++) {
+        for (let i = 0; i < navBarList.length; i+=2) {
             navBarList[i].classList.add("disabled");
+            navBarList[i+1].classList.add("disabled");
             if (navBarList[i].id !== id) {
                 navBarList[i].classList.add("notActive");
+                navBarList[i+1].classList.add("notActive");
             } else {
                 navBarList[i].classList.add("active");
+                navBarList[i+1].classList.add("active");
             }
         }
     }

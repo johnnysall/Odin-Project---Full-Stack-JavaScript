@@ -59,6 +59,7 @@ table {
 :root {
     --backColour: rgb(252, 252, 252);
     --secondColour: rgb(61, 61, 61);
+    --hoverColour: rgb(70, 70, 70); 
     --alternateColour: rgb(196, 196, 196);
     --highlightColour: rgb(80, 221, 61);
     --fontFam: 'Dosis', sans-serif;
@@ -100,53 +101,167 @@ body {
     box-sizing: border-box;
 }
 
-#menu > div {
+#menu > div,
+#uncollapsedAlgorithms > div {
     height: 100%;
-    width: calc(100%/8);
+    width: calc(96%/8);
     float: left;
     font-family: var(--fontFam);
     color: var(--fontCol);
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
+    /* border-top-left-radius: 10px;
+    border-top-right-radius: 10px; */
     box-sizing: border-box;
+    padding: 0 5px 0 5px;
 
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-#menu > .btn:hover {
+#uncollapsedAlgorithms {
+    padding: 0 !important;
+}
+
+#uncollapsedAlgorithms > div {
+    width: calc(100%/5) !important;
+}
+
+#collapsedAlgorithms {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#menu > .btn:hover,
+#menu > #uncollapsedAlgorithms > .btn:hover {
     cursor: pointer;
-    border-left: solid thin rgb(47, 255, 47);
+    /* border-left: solid thin rgb(47, 255, 47);
     border-top: solid thin rgb(47, 255, 47);
     border-right: solid thin rgb(47, 255, 47);
-    box-shadow: inset 0 0 4px 1px rgb(47, 255, 47);
+    box-shadow: inset 0 0 4px 1px rgb(47, 255, 47);thirdColour
     box-sizing: border-box;
+    color: rgb(47, 255, 47); */
+
+    background-color: var(--hoverColour);
+    box-shadow: inset 0 0 4px 1px var(--hoverColour);
+    box-sizing: border-box;
+}
+
+#menu > .active,
+#menu > #uncollapsedAlgorithms > .active {
     color: rgb(47, 255, 47);
 }
 
-#menu > .active {
-    color: rgb(47, 255, 47);
-}
-
-#menu > .notActive {
+#menu > .notActive,
+#menu > #uncollapsedAlgorithms > .notActive {
     color: rgb(255, 47, 47);
 }
 
-#menu > .disabled:hover {
+#menu > .disabled:hover,
+#menu > #uncollapsedAlgorithms > .disabled:hover {
     cursor: default;
     border: none;
     box-shadow: none;
     box-sizing: border-box;
     color: rgb(255, 47, 47);
+    background-color: var(--secondColour);
 }
 
-#menu > .disabled.active:hover {
+#menu > .disabled.active:hover,
+#menu > #uncollapsedAlgorithms > .disabled.active:hover {
     cursor: default;
     border: none;
     box-shadow: inset 0 0 4px 1px var(--secondColour);
     box-sizing: border-box;
     color: rgb(47, 255, 47);
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+  
+.dropdown-content {
+    /* display: none; */
+    height: 0;
+    position: absolute;
+    background-color: #f9f9f9;
+    width: 100% !important;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+    top: 45px;
+    transition: all 0.25s;
+}
+  
+.dropdown-content a {
+    color: black;
+    text-decoration: none;
+    display: block;
+    height: 0;
+    padding: 0;
+    font-size: 0;
+    transition: all 0.5s;
+}
+  
+.dropdown-content a:hover {
+    background-color: var(--hoverColour);
+    color: var(--fontCol);
+    cursor: pointer;
+}
+
+.dropdown:hover a {
+    height: 16px;
+    font-size: 16px;
+    padding: 12px 16px;
+}
+  
+.dropdown:hover .dropdown-content {
+    /* display: block; */
+    height: 200px;
+}
+  
+.dropdown:hover .dropBtn {
+    background-color: #3e8e41;
+}
+
+@media only screen and (max-width: 900px) {
+    #uncollapsedAlgorithms {
+        display: none !important;
+    }
+
+    /* #collapsedAlgorithms {
+        display: inline-block !important;
+    } */
+
+    #menu > div,
+    #collapsedAlgorithms {
+        width: calc(100%/4) !important;
+        padding: 0 5px 0 5px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+}
+
+@media only screen and (min-width: 900px) {
+    #uncollapsedAlgorithms {
+        display: inline-block !important;
+        height: 100% !important;
+        width: calc((100%/8)*5) !important;
+    }
+
+    #collapsedAlgorithms {
+        display: none !important;
+    }
+}
+
+.scaleTitle {
+    float: right;
+}
+
+#sizeRange,
+#speedRange {
+    width: 100%;
 }
 
 #arrayContainer {
@@ -195,11 +310,36 @@ body {
 #stats > div {
     font-family: var(--fontFam);
     color: var(--fontCol);
+    font-size: 14px;
 
     display: flex;
     justify-content: center;
     align-items: center;
 }
+
+@media only screen and (max-width: 700px) {
+    #stats {
+        display: grid;
+        grid-template: repeat(4, 1fr)/ 1fr;
+        gap: 6px;
+        height: calc((14px*4) + (6px*4));
+        padding-bottom: 6px;
+        border-bottom-left-radius: 90px;
+        border-bottom-right-radius: 90px;
+    }
+}
+/* 
+@media only screen and (max-width: 550px) {
+    #stats > div {
+        font-size: 12px;
+    }
+}
+
+@media only screen and (max-width: 450px) {
+    #stats > div {
+        font-size: 10px;
+    }
+} */
 
 #visualArrayContainer {
     width: 80%;
